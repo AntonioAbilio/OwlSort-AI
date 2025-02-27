@@ -4,127 +4,28 @@ import random
 import copy
 from collections import deque
 
+from models.bird import Bird
+from models.branch import Branch
+from models.button import Button
+from constants import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    BRANCH_WIDTH,
+    BRANCH_HEIGHT,
+    MAX_BIRDS_PER_BRANCH,
+    COLORS
+)
+
 # Initialize pygame
 pygame.init()
 
-# Game constants
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
-BRANCH_WIDTH = 200
-BRANCH_HEIGHT = 60
-BIRD_SIZE = 40
-MAX_BIRDS_PER_BRANCH = 4
-COLORS = [
-    (255, 0, 0),    # Red
-    (0, 0, 255),    # Blue
-    (0, 255, 0),    # Green
-    (255, 255, 0),  # Yellow
-]
+
 
 # Set up the screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Bird Sort 2: Color Puzzle")
 clock = pygame.time.Clock()
 
-class Bird:
-    def __init__(self, color):
-        self.color = color
-        # Create a simple bird representation (circle for now)
-        self.surface = pygame.Surface((BIRD_SIZE, BIRD_SIZE), pygame.SRCALPHA)
-        pygame.draw.circle(self.surface, color, (BIRD_SIZE//2, BIRD_SIZE//2), BIRD_SIZE//2)
-        
-    def draw(self, surface, pos):
-        surface.blit(self.surface, pos)
-        
-    def __eq__(self, other):
-        if not isinstance(other, Bird):
-            return False
-        return self.color == other.color
-    
-    def __hash__(self):
-        return hash(self.color)
-
-class Branch:
-    def __init__(self, x, y):
-        if x < (SCREEN_WIDTH/2): self.side = "left"
-        else: self.side = "right"
-        self.x = x
-        self.y = y
-        self.birds = []
-        self.rect = pygame.Rect(x, y, BRANCH_WIDTH, BRANCH_HEIGHT)
-        self.is_completed = False
-    
-    def add_bird(self, bird):
-        if len(self.birds) < MAX_BIRDS_PER_BRANCH and not self.is_completed:
-            self.birds.append(bird)
-            return True
-        return False
-    
-    def draw(self, surface):
-        # Draw branch
-        pygame.draw.rect(surface, (139, 69, 19), self.rect)  # Brown color for branch
-        
-        # Draw birds on branch
-        if self.side == "left":
-            for i, bird in enumerate(self.birds):
-                bird_x = self.x + 10 + (i * (BIRD_SIZE + 10))
-                bird_y = self.y - BIRD_SIZE
-                bird.draw(surface, (bird_x, bird_y))
-        
-        else:
-            for i, bird in enumerate(self.birds):
-                bird_x = self.x + BRANCH_WIDTH - (40 + (i * (BIRD_SIZE + 10)))
-                bird_y = self.y - BIRD_SIZE
-                bird.draw(surface, (bird_x, bird_y))
-        
-    def check_completion(self):
-        # Branch is complete if it has birds and all are the same color
-        if not self.birds:
-            return False
-            
-        first_color = self.birds[0].color
-        if len(self.birds) == MAX_BIRDS_PER_BRANCH and all(bird.color == first_color for bird in self.birds):
-            self.is_completed = True
-            return True
-        return False
-    
-    def __eq__(self, other):
-        if not isinstance(other, Branch):
-            return False
-        if len(self.birds) != len(other.birds):
-            return False
-        for i in range(len(self.birds)):
-            if self.birds[i].color != other.birds[i].color:
-                return False
-        return True
-
-class Button:
-    def __init__(self, x, y, width, height, text, color, hover_color):
-        self.rect = pygame.Rect(x, y, width, height)
-        self.text = text
-        self.color = color
-        self.hover_color = hover_color
-        self.current_color = color
-        self.font = pygame.font.SysFont(None, 30)
-        
-    def draw(self, surface):
-        # Check for mouse hover
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.current_color = self.hover_color
-        else:
-            self.current_color = self.color
-            
-        # Draw button
-        pygame.draw.rect(surface, self.current_color, self.rect)
-        pygame.draw.rect(surface, (0, 0, 0), self.rect, 2)
-        
-        # Draw text
-        text_surf = self.font.render(self.text, True, (0, 0, 0))
-        text_rect = text_surf.get_rect(center=self.rect.center)
-        surface.blit(text_surf, text_rect)
-        
-    def is_clicked(self, pos):
-        return self.rect.collidepoint(pos)
 
 class GameState:
     def __init__(self, branches, move_history=None):
@@ -316,9 +217,14 @@ class Game:
                 self.completed_branches += 1
                 print(f"Branch completed! Total completed: {self.completed_branches}")
                 
-            # Reset solution path as the board state has changed
-            self.solution_path = None
-            
+            # Check if the user has actually used the hint.
+            if self.solution_path:
+                oldState = (self.branches.index(from_branch), self.branches.index(to_branch))
+                if self.solution_path[0] == oldState:
+                    self.solution_path.popleft()
+                else:
+                    self.solution_path = None
+
             return True
         
         return False
@@ -443,7 +349,7 @@ class Game:
         start_state.print_state()
         
         # Setup for BFS
-        queue = deque([(start_state, [])])  # (state, move_path)
+        queue = deque([(start_state, deque())])  # (state, move_path)
         visited = set([hash(start_state)])  # Use hash to track visited states
         
         states_checked = 0
@@ -481,7 +387,7 @@ class Game:
                         success = self.apply_move(new_branches, from_idx, to_idx)
                         if success:
                             new_state = GameState(new_branches)
-                            new_path = current_path + [(from_idx, to_idx)]
+                            new_path = current_path + deque([(from_idx, to_idx)])
                             
                             # Check if we've seen this state before
                             new_state_hash = hash(new_state)
@@ -495,10 +401,19 @@ class Game:
     def get_hint(self):
         """Get a hint for the next move."""
         print("Getting hint...")
-        solution = self.find_solution_bfs()
-        if solution and len(solution) > 0:
+
+        # Check if the last move was made using the hint
+        # If so then use the list of the saved solutions
+
+        if not(self.solution_path):
+            self.solution_path = self.find_solution_bfs()
+        else: # TODO: remove else, only for debug
+            print("Now using cached solution")
+
+        if self.solution_path and len(self.solution_path) > 0:
             # Get the next move from the solution
-            from_idx, to_idx = solution[0]
+            print(self.solution_path)
+            from_idx, to_idx = self.solution_path[0]
             print(f"Hint suggests moving from branch {from_idx} to {to_idx}")
             self.hint_from = self.branches[from_idx]
             self.hint_to = self.branches[to_idx]
