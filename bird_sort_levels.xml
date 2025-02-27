@@ -1,0 +1,353 @@
+<?xml version='1.0' encoding='utf-8'?>
+<levels>
+  <level id="1" difficulty_score="6387.21">
+    <metrics states_checked="6205" solution_length="14" max_queue_size="1" solve_time="0.417" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="2" difficulty_score="6824.54">
+    <metrics states_checked="6650" solution_length="13" max_queue_size="1" solve_time="0.44" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="3" difficulty_score="6953.23">
+    <metrics states_checked="6786" solution_length="12" max_queue_size="1" solve_time="0.467" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(255, 0, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(0, 0, 255)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(255, 255, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="4" difficulty_score="6975.97">
+    <metrics states_checked="6810" solution_length="12" max_queue_size="1" solve_time="0.455" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(255, 255, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(255, 0, 0)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="5" difficulty_score="8334.61">
+    <metrics states_checked="8146" solution_length="13" max_queue_size="1" solve_time="0.581" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(0, 0, 255)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(255, 255, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(0, 0, 255)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="6" difficulty_score="9714.39">
+    <metrics states_checked="9510" solution_length="14" max_queue_size="1" solve_time="0.639" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(255, 0, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="7" difficulty_score="10323.69">
+    <metrics states_checked="10100" solution_length="15" max_queue_size="1" solve_time="0.732" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(255, 0, 0)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="8" difficulty_score="12743.27">
+    <metrics states_checked="12505" solution_length="15" max_queue_size="1" solve_time="0.878" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(255, 0, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(255, 255, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="9" difficulty_score="13420.33">
+    <metrics states_checked="13169" solution_length="16" max_queue_size="1" solve_time="0.908" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(255, 0, 0)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(0, 0, 255)" />
+        <bird index="3" color="(255, 255, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(0, 255, 0)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+  <level id="10" difficulty_score="16910.1">
+    <metrics states_checked="16642" solution_length="15" max_queue_size="1" solve_time="1.176" />
+    <branches>
+      <branch id="0" x="100" y="100">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(255, 255, 0)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(0, 0, 255)" />
+        <bird index="4" color="(255, 255, 0)" />
+      </branch>
+      <branch id="1" x="980" y="100">
+        <bird index="0" color="(0, 255, 0)" />
+        <bird index="1" color="(0, 0, 255)" />
+        <bird index="2" color="(255, 0, 0)" />
+        <bird index="3" color="(0, 255, 0)" />
+        <bird index="4" color="(0, 255, 0)" />
+      </branch>
+      <branch id="2" x="100" y="200">
+        <bird index="0" color="(255, 255, 0)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(255, 255, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(0, 0, 255)" />
+      </branch>
+      <branch id="3" x="980" y="200">
+        <bird index="0" color="(0, 0, 255)" />
+        <bird index="1" color="(0, 255, 0)" />
+        <bird index="2" color="(255, 255, 0)" />
+        <bird index="3" color="(255, 0, 0)" />
+        <bird index="4" color="(255, 0, 0)" />
+      </branch>
+      <branch id="4" x="100" y="300" />
+      <branch id="5" x="980" y="300" />
+    </branches>
+  </level>
+</levels>
