@@ -76,6 +76,7 @@ class Game:
         margin = 100
         rows = 3
         cols = 2
+        id = 0
         
         for row in range(rows):
             for col in range(cols):
@@ -86,7 +87,8 @@ class Game:
                     x = SCREEN_WIDTH - margin - BRANCH_WIDTH
                 
                 y = margin + row * (BRANCH_HEIGHT + 100)
-                self.branches.append(Branch(x, y))
+                self.branches.append(Branch(x, y, id))
+                id += 1
         
         # Generate a solvable distribution of birds
         all_birds = []

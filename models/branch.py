@@ -8,7 +8,7 @@ from constants import (
 )
 
 class Branch:
-    def __init__(self, x, y):
+    def __init__(self, x, y, id):
         if x < (SCREEN_WIDTH/2): self.side = "left"
         else: self.side = "right"
         self.x = x
@@ -16,6 +16,7 @@ class Branch:
         self.birds = []
         self.rect = pygame.Rect(x, y, BRANCH_WIDTH, BRANCH_HEIGHT)
         self.is_completed = False
+        self.id = id
     
     def add_bird(self, bird):
         if len(self.birds) < MAX_BIRDS_PER_BRANCH and not self.is_completed:
@@ -59,4 +60,6 @@ class Branch:
         for i in range(len(self.birds)):
             if self.birds[i].color != other.birds[i].color:
                 return False
+        if self.side != other.side:
+            return False
         return True
