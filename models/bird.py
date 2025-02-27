@@ -15,7 +15,3 @@ class Bird:
         if not isinstance(other, Bird):
             return False
         return self.color == other.color
-    
-    def __hash__(self):
-        return hash(self.color)
-
