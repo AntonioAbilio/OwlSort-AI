@@ -274,7 +274,7 @@ class Game:
             
         new_branches = []
         for branch in source_branches:
-            new_branch = Branch(branch.x, branch.y)
+            new_branch = Branch(branch.x, branch.y, branch.id)
             new_branch.side = branch.side
             new_branch.is_completed = branch.is_completed
             # Copy birds
