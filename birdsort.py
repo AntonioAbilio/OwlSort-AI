@@ -7,6 +7,7 @@ from collections import deque
 from models.bird import Bird
 from models.branch import Branch
 from models.button import Button
+
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
@@ -15,6 +16,10 @@ from constants import (
     MAX_BIRDS_PER_BRANCH,
     COLORS
 )
+
+from utils.algorithms import *
+
+from states.gameState import GameState
 
 # Initialize pygame
 pygame.init()
@@ -26,33 +31,6 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Bird Sort 2: Color Puzzle")
 clock = pygame.time.Clock()
 
-
-class GameState:
-    def __init__(self, branches, move_history=None):
-        self.branches = branches
-        self.move_history = move_history if move_history is not None else []
-        
-    def __eq__(self, other):
-        if not isinstance(other, GameState):
-            return False
-        if len(self.branches) != len(other.branches):
-            return False
-        for i in range(len(self.branches)):
-            if not self.branches[i] == other.branches[i]:
-                return False
-        return True
-    
-    def __hash__(self):
-        # Create a hashable representation of the state
-        state_tuple = tuple(tuple((bird.color) for bird in branch.birds) for branch in self.branches)
-        return hash(state_tuple)
-    
-    def print_state(self):
-        """Print the current state for debugging"""
-        print("GameState:")
-        for i, branch in enumerate(self.branches):
-            birds_colors = [f"{bird.color}" for bird in branch.birds]
-            print(f"  Branch {i}: {birds_colors}")
 
 class Game:
     def __init__(self):
@@ -335,76 +313,6 @@ class Game:
             print(f"Move: Branch {from_idx} -> Branch {to_idx} (Color: {top_color})")
         else:
             print(f"Invalid Move: Branch {from_idx} is empty")
-    
-    def find_solution_dfs(self):
-        """Use DFS to find a solution path."""
-        print("\n=== Finding solution with DFS ===")
-        if self.solution_path:
-            print("Using existing solution path")
-            return self.solution_path
-
-        # Create a starting state
-        start_branches = self.clone_branches()
-        start_state = GameState(start_branches)
-
-        print("Initial state for DFS:")
-        start_state.print_state()
-
-        # Setup for DFS
-        stack = [(start_state, deque())]  # (state, move_path)
-        visited = set([hash(start_state)])  # Use hash to track visited states
-
-        old_path = []
-        old_path_size = sys.maxsize;
-
-        states_checked = 0
-        max_stack_size = 1
-
-        while stack:
-            states_checked += 1
-            if states_checked % 100 == 0:
-                print(f"DFS progress: {states_checked} states checked, stack size: {len(stack)}")
-
-            max_stack_size = max(max_stack_size, len(stack))
-            current_state, current_path = stack.pop()
-
-            # Check if this is a winning state
-            if self.is_game_won(current_state.branches):
-                print(f"Solution found! Path length: {len(current_path)}")
-                print(f"DFS stats: {states_checked} states checked, max stack size: {max_stack_size}")
-                
-                if len(current_path) < old_path_size:
-                    print("Found new path, old was ", old_path, " and new is ", current_path)
-                    old_path = current_path
-                    old_path_size = len(current_path)
-                continue;
-
-            # Try all possible moves
-            for from_idx in range(len(current_state.branches)):
-                for to_idx in range(len(current_state.branches)):
-                    if from_idx == to_idx:
-                        continue
-
-                    from_branch = current_state.branches[from_idx]
-                    to_branch = current_state.branches[to_idx]
-
-                    if self.is_valid_move(from_branch, to_branch):
-                        # Create a new state by cloning the current one
-                        new_branches = self.clone_branches(current_state.branches)
-
-                        # Apply the move
-                        success = self.apply_move(new_branches, from_idx, to_idx)
-                        if success:
-                            new_state = GameState(new_branches)
-                            new_path = current_path + deque([(from_idx, to_idx)])
-
-                            # Check if we've seen this state before
-                            new_state_hash = hash(new_state)
-                            if new_state_hash not in visited:
-                                visited.add(new_state_hash)
-                                stack.append((new_state, new_path))
-        
-        return old_path
 
     def find_solution_bfs(self):
         print("\n=== Finding solution with BFS ===")
@@ -478,7 +386,7 @@ class Game:
         # If so then use the list of the saved solutions
 
         if not(self.solution_path):
-            self.solution_path = self.find_solution_dfs()
+            self.solution_path = find_solution_dfs(self)
         else: # TODO: remove else, only for debug
             print("Now using cached solution")
 
