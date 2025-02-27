@@ -233,7 +233,7 @@ class Game:
     
     def is_valid_move(self, from_branch, to_branch):
         """Check if a move from one branch to another is valid without actually moving birds."""
-        if not from_branch.birds or to_branch.is_completed:
+        if not from_branch.birds or from_branch.is_completed or to_branch.is_completed:
             return False
         
         top_bird_color = from_branch.birds[-1].color
@@ -336,6 +336,76 @@ class Game:
         else:
             print(f"Invalid Move: Branch {from_idx} is empty")
     
+    def find_solution_dfs(self):
+        """Use DFS to find a solution path."""
+        print("\n=== Finding solution with DFS ===")
+        if self.solution_path:
+            print("Using existing solution path")
+            return self.solution_path
+
+        # Create a starting state
+        start_branches = self.clone_branches()
+        start_state = GameState(start_branches)
+
+        print("Initial state for DFS:")
+        start_state.print_state()
+
+        # Setup for DFS
+        stack = [(start_state, deque())]  # (state, move_path)
+        visited = set([hash(start_state)])  # Use hash to track visited states
+
+        old_path = []
+        old_path_size = sys.maxsize;
+
+        states_checked = 0
+        max_stack_size = 1
+
+        while stack:
+            states_checked += 1
+            if states_checked % 100 == 0:
+                print(f"DFS progress: {states_checked} states checked, stack size: {len(stack)}")
+
+            max_stack_size = max(max_stack_size, len(stack))
+            current_state, current_path = stack.pop()
+
+            # Check if this is a winning state
+            if self.is_game_won(current_state.branches):
+                print(f"Solution found! Path length: {len(current_path)}")
+                print(f"DFS stats: {states_checked} states checked, max stack size: {max_stack_size}")
+                
+                if len(current_path) < old_path_size:
+                    print("Found new path, old was ", old_path, " and new is ", current_path)
+                    old_path = current_path
+                    old_path_size = len(current_path)
+                continue;
+
+            # Try all possible moves
+            for from_idx in range(len(current_state.branches)):
+                for to_idx in range(len(current_state.branches)):
+                    if from_idx == to_idx:
+                        continue
+
+                    from_branch = current_state.branches[from_idx]
+                    to_branch = current_state.branches[to_idx]
+
+                    if self.is_valid_move(from_branch, to_branch):
+                        # Create a new state by cloning the current one
+                        new_branches = self.clone_branches(current_state.branches)
+
+                        # Apply the move
+                        success = self.apply_move(new_branches, from_idx, to_idx)
+                        if success:
+                            new_state = GameState(new_branches)
+                            new_path = current_path + deque([(from_idx, to_idx)])
+
+                            # Check if we've seen this state before
+                            new_state_hash = hash(new_state)
+                            if new_state_hash not in visited:
+                                visited.add(new_state_hash)
+                                stack.append((new_state, new_path))
+        
+        return old_path
+
     def find_solution_bfs(self):
         print("\n=== Finding solution with BFS ===")
         """Use BFS to find the shortest solution path."""
@@ -408,7 +478,7 @@ class Game:
         # If so then use the list of the saved solutions
 
         if not(self.solution_path):
-            self.solution_path = self.find_solution_bfs()
+            self.solution_path = self.find_solution_dfs()
         else: # TODO: remove else, only for debug
             print("Now using cached solution")
 
