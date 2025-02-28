@@ -55,6 +55,8 @@ class Branch:
     def __eq__(self, other):
         if not isinstance(other, Branch):
             return False
+        if other.id != self.id:
+            return False
         if len(self.birds) != len(other.birds):
             return False
         for i in range(len(self.birds)):
