@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+from state_manager import State
 import copy
 from collections import deque
 
@@ -32,8 +33,9 @@ pygame.display.set_caption("Bird Sort 2: Color Puzzle")
 clock = pygame.time.Clock()
 
 
-class Game:
+class Game(State):
     def __init__(self):
+        super().__init__()
         self.branches = []
         self.selected_branch = None
         self.setup_level()
