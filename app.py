@@ -1,6 +1,8 @@
 import pygame
 import sys
+from state_manager import State, StateManager
 from mainmenu import MainMenu
+from birdsort import GameState, Game
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
@@ -16,19 +18,20 @@ clock = pygame.time.Clock()
 
 def main():
     mainMenu = MainMenu()
+    stateManager = StateManager(mainMenu)
     print("Game initialized. Press the hint button to test BFS algorithm.")
     
     # Main game loop
     running = True
     while running:
-        for event in pygame.event.get():
+        for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 running = False
-            mainMenu.handle_event(event)
+            stateManager.handle_event(event)
         
-        #mainMenu.update()
-        mainMenu.draw(screen)
-        
+        stateManager.update()
+        stateManager.draw(screen)
+                
         pygame.display.flip()
         clock.tick(60)
     

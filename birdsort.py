@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+from state_manager import State
 import copy
 from collections import deque
 
@@ -54,8 +55,9 @@ class GameState:
             birds_colors = [f"{bird.color}" for bird in branch.birds]
             print(f"  Branch {i}: {birds_colors}")
 
-class Game:
+class Game(State):
     def __init__(self):
+        super().__init__()
         self.branches = []
         self.selected_branch = None
         self.setup_level()

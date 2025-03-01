@@ -1,13 +1,15 @@
 import pygame
+from state_manager import State
+from birdsort import Game
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT
 )
-from models.branch import Branch
 from models.button import Button
 
-class MainMenu:
+class MainMenu(State) :
     def __init__(self):
+        super().__init__()
         self.title = pygame.image.load("assets/title.png")
         self.upper_left_branch = pygame.image.load("assets/branch.png")
         self.cucu = pygame.image.load("assets/static_cucu.png")
@@ -18,13 +20,17 @@ class MainMenu:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             
-            # Check if hint button was clicked
-            if self.hint_button.is_clicked(mouse_pos):
-                print("Hint button clicked")
-                self.get_hint()
+            # Check if start button was clicked
+            if self.start_button.is_clicked(mouse_pos):
+                self.next_state = Game()
+                print("Start button clicked")
                 return
             
-            self.handle_click(mouse_pos)
+            # Check if quit button was clicked
+            if self.quit_button.is_clicked(mouse_pos):
+                print("Quit button clicked")
+                return
+
             
     def draw(self, surface):
         # Clear screen
