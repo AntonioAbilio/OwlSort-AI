@@ -388,7 +388,7 @@ class Game(State):
         # If so then use the list of the saved solutions
 
         if not(self.solution_path):
-            self.solution_path = find_solution_dfs(self)
+            self.solution_path = find_solution_dfs_with_heuristics(self)
         else: # TODO: remove else, only for debug
             print("Now using cached solution")
 
