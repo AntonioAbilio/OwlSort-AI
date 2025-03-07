@@ -178,13 +178,13 @@ class Game(State):
             print(f"Target branch is empty, can move: {can_move}")
         else:
             # Non-empty branch can only accept matching color birds if there's space
-            can_move = (to_branch.birds[-1].color == top_bird_color and 
-                         len(birds_to_move) <= MAX_BIRDS_PER_BRANCH - len(to_branch.birds))
+            can_move = (to_branch.birds[-1].color == top_bird_color and len(to_branch.birds) < MAX_BIRDS_PER_BRANCH)
             print(f"Target branch has color {to_branch.birds[-1].color}, can move: {can_move}")
         
         if can_move:
             # Remove birds from source branch (in reverse to maintain order)
-            for _ in range(len(birds_to_move)):
+            numBirdsToBeMoved = min(MAX_BIRDS_PER_BRANCH - len(to_branch.birds), len(birds_to_move))
+            for _ in range(numBirdsToBeMoved):
                 from_branch.birds.pop()
             
             # Add birds to target branch
@@ -231,8 +231,7 @@ class Game(State):
             return birds_to_move_count <= MAX_BIRDS_PER_BRANCH
         else:
             # Non-empty branch needs matching color and sufficient space
-            return (to_branch.birds[-1].color == top_bird_color and 
-                   birds_to_move_count <= MAX_BIRDS_PER_BRANCH - len(to_branch.birds))
+            return (to_branch.birds[-1].color == top_bird_color and len(to_branch.birds) > 0)
     
     def is_game_won(self, branches=None):
         """Check if game is won (all color groups completed)."""
