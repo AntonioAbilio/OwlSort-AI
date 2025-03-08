@@ -1,8 +1,7 @@
-import pygame
+import pygame 
 import sys
 import random
 from state_manager import State
-import copy
 from collections import deque
 
 from models.bird import Bird
@@ -315,69 +314,7 @@ class Game(State):
         else:
             print(f"Invalid Move: Branch {from_idx} is empty")
 
-    def find_solution_bfs(self):
-        print("\n=== Finding solution with BFS ===")
-        """Use BFS to find the shortest solution path."""
-        if self.solution_path:
-            print("Using existing solution path")
-            return self.solution_path
-            
-        # Create a starting state
-        start_branches = self.clone_branches()
-        start_state = GameState(start_branches)
-        
-        print("Initial state for BFS:")
-        start_state.print_state()
-        
-        # Setup for BFS
-        queue = deque([(start_state, deque())])  # (state, move_path)
-        visited = set([hash(start_state)])  # Use hash to track visited states
-        
-        states_checked = 0
-        max_queue_size = 1
-        
-        while queue:
-            states_checked += 1
-            if states_checked % 100 == 0:
-                print(f"BFS progress: {states_checked} states checked, queue size: {len(queue)}")
-            
-            max_queue_size = max(max_queue_size, len(queue))
-            current_state, current_path = queue.popleft()
-            
-            # Check if this is a winning state
-            if self.is_game_won(current_state.branches):
-                print(f"Solution found! Path length: {len(current_path)}")
-                print(f"BFS stats: {states_checked} states checked, max queue size: {max_queue_size}")
-                self.solution_path = current_path
-                return current_path
-            
-            # Try all possible moves
-            for from_idx in range(len(current_state.branches)):
-                for to_idx in range(len(current_state.branches)):
-                    if from_idx == to_idx:
-                        continue
-                    
-                    from_branch = current_state.branches[from_idx]
-                    to_branch = current_state.branches[to_idx]
-                        
-                    if self.is_valid_move(from_branch, to_branch):
-                        # Create a new state by cloning the current one
-                        new_branches = self.clone_branches(current_state.branches)
-                        
-                        # Apply the move
-                        success = self.apply_move(new_branches, from_idx, to_idx)
-                        if success:
-                            new_state = GameState(new_branches)
-                            new_path = current_path + deque([(from_idx, to_idx)])
-                            
-                            # Check if we've seen this state before
-                            new_state_hash = hash(new_state)
-                            if new_state_hash not in visited:
-                                visited.add(new_state_hash)
-                                queue.append((new_state, new_path))
-        
-        print("No solution found after checking", states_checked, "states")
-        return None
+
     
     def get_hint(self):
         """Get a hint for the next move."""
