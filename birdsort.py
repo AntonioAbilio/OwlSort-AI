@@ -21,14 +21,6 @@ from constants import (
 from algorithms.dfs import *
 from states.gameState import GameState
 
-# Initialize pygame
-pygame.init()
-
-# Set up the screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Bird Sort 2: Color Puzzle")
-clock = pygame.time.Clock()
-
 
 class Game(State):
     def __init__(self):
@@ -40,9 +32,30 @@ class Game(State):
         self.completed_branches = 0
         self.font = pygame.font.SysFont(None, 36)
         
-        # Create hint button
-        self.hint_button = Button(SCREEN_WIDTH - 200, 20, 180, 50, "Get Hint", 
-                                 (200, 200, 255), (150, 150, 255))
+        # Create hint buttons
+        self.hint_buttons = []
+        button_width = 150
+        button_height = 50
+
+        algorithms = [["bfs",Algorithm.BFS], ["dfs",Algorithm.DFS], ["dls",Algorithm.DLS], ["astar",Algorithm.ASTAR]]
+        total_buttons = len(algorithms)  # Number of algorithms
+        total_width = total_buttons * button_width
+        spacing = (SCREEN_WIDTH - total_width) // (total_buttons + 1)
+        
+        for i, algorithm in enumerate(algorithms):
+            x = spacing + i * (button_width + spacing)
+            y = SCREEN_HEIGHT - button_height - 20
+            button = Button(x, y, button_width, button_height, f"Hint ({algorithm[0]})",(200, 200, 255), (150, 150, 255))
+            self.hint_buttons.append((button, algorithm))
+            
+            """
+            # Create hint button
+            self.hint_button = Button(SCREEN_WIDTH - 200, 20, 180, 50, "Get Hint", 
+                                    (200, 200, 255), (150, 150, 255))
+            self.hint_from = None
+            self.hint_to = None
+            self.solution_path = None
+        """
         self.hint_from = None
         self.hint_to = None
         self.solution_path = None
@@ -94,11 +107,12 @@ class Game(State):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             
-            # Check if hint button was clicked
-            if self.hint_button.is_clicked(mouse_pos):
-                print("Hint button clicked")
-                self.get_hint()
-                return
+            # Check if any hint button was clicked
+            for button, algorithm in self.hint_buttons:
+                if button.is_clicked(mouse_pos):
+                    print(f"Hint button for {algorithm[0]} clicked")
+                    self.get_hint(algorithm[1])
+                    return
             
             self.handle_click(mouse_pos)
     
@@ -158,13 +172,13 @@ class Game(State):
         else:
             print(f"Invalid Move: Branch {from_idx} is empty")
 
-    def get_hint(self):
-        solver = Solver(Algorithm.ASTAR) #TODO: make this be changable, not hardcoded 
+    def get_hint(self, algorithm):
+        solver = Solver(algorithm)  # TODO: make this be changeable, not hardcoded 
 
-        if not(self.solution_path == self.game_state.move_history): #TODO: change how caching is being done!
+        if not(self.solution_path == self.game_state.move_history):  # TODO: change how caching is being done!
             # Use the game state for the solver
             self.solution_path = solver.find_solution(GameState(self.branches))
-        else: # TODO: remove else, only for debug
+        else:  # TODO: remove else, only for debug
             print("Now using cached solution")
 
         if self.solution_path and len(self.solution_path) > 0:
@@ -176,7 +190,7 @@ class Game(State):
         else:
             print("No hint available - couldn't find solution")
     
-    def is_game_over(self): #TODO: add a state for stalemate
+    def is_game_over(self):  # TODO: add a state for stalemate
         if(self.game_state.is_solved()):
             return 1
         else:
@@ -189,7 +203,7 @@ class Game(State):
     def draw(self, surface):
         surface.fill((135, 206, 235))  # Sky blue background
         
-        for branch in self.branches: #TODO: make this use the updated textures
+        for branch in self.branches:  # TODO: make this use the updated textures
             branch.draw(surface)
         
         # Highlight selected branch
@@ -202,8 +216,9 @@ class Game(State):
         if self.hint_to:
             pygame.draw.rect(surface, (255, 165, 0), self.hint_to.rect, 3)  # Orange for target
         
-        # Draw hint button
-        self.hint_button.draw(surface)
+        # Draw hint buttons
+        for button, _ in self.hint_buttons:
+            button.draw(surface)
         
         # Draw UI
         moves_text = self.font.render(f"Moves: {self.moves}", True, (0, 0, 0))
@@ -236,4 +251,3 @@ class Game(State):
     def get_game_state(self):
         """Return the current game state."""
         return self.game_state
-    
