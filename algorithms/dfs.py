@@ -1,27 +1,35 @@
-import sys
+from algorithms import algo_utils
 from collections import deque
 from states.gameState import GameState
-
 from algorithms import algo_utils
+import time
 
-def find_solution(self, maxDepth = -1):
-    """Use DFS to find a solution path."""
-    print(f"\n=== Finding solution with DFS (maxDepth={maxDepth}) ===")
-    if self.solution_path:
-        print("Using existing solution path")
-        return self.solution_path
-   
-    # Create a starting state using the game's current state
-    current_game_state = self.get_game_state()
-    if (current_game_state.is_solved()):
+def find_solution(game_state, max_depth=-1):
+    """
+    Use Depth-First Search to find a solution path.
+    
+    Parameters:
+    game_state - The initial GameState
+    max_depth - Maximum search depth, -1 for unlimited
+    
+    Returns:
+    A list of moves [(from_idx, to_idx), ...] representing the solution path
+    """
+    import sys
+    
+    start_time = time.time()
+    print(f"\n=== Finding solution with DFS (maxDepth={max_depth}) ===")
+    
+    # Check if already solved
+    if game_state.is_solved():
         print("Game is already solved!")
-        return self.solution_path
+        return []
    
     # Setup for DFS
-    stack = [(current_game_state, deque(), 0)]  # (state, move_path, depth)
-    visited = set([hash(current_game_state)])  # Use hash to track visited states
-    old_path = []
-    old_path_size = sys.maxsize
+    stack = [(game_state, [], 0)]  # (state, move_path, depth)
+    visited = set([hash(game_state)])  # Use hash to track visited states
+    best_solution = None
+    best_solution_length = sys.maxsize
     states_checked = 0
     max_stack_size = 1
    
@@ -35,31 +43,41 @@ def find_solution(self, maxDepth = -1):
        
         # Check if this is a winning state
         if current_state.is_solved():
-            print(f"Solution found! Path length: {len(current_path)}")
-            print(f"DFS stats: {states_checked} states checked, max stack size: {max_stack_size}")
-           
-            if len(current_path) < old_path_size:
-                print("Found new path, old was ", old_path, " and new is ", current_path)
-                old_path = current_path
-                old_path_size = len(current_path)
+            # Found a solution
+            if len(current_path) < best_solution_length:
+                print(f"New solution found! Path length: {len(current_path)}")
+                if best_solution:
+                    print(f"Previous best was: {best_solution_length}")
+                best_solution = current_path
+                best_solution_length = len(current_path)
             continue
        
         # Stop exploring if we've reached the maximum depth
-        if maxDepth != -1 and current_depth >= maxDepth:
+        if max_depth != -1 and current_depth >= max_depth:
             continue
        
-        #use expand_states to generate all possible next states
-        for new_state, from_idx, to_idx in algo_utils.expand_states(current_state):
-            new_path = current_path + deque([(from_idx, to_idx)])
-
+        # Expand this state (reversed order for DFS to prioritize first branches)
+        next_states = algo_utils.expand_states(current_state)
+        for new_state, from_idx, to_idx in reversed(next_states):
+            new_path = current_path + [(from_idx, to_idx)]
             new_state_hash = hash(new_state)
+            
             if new_state_hash not in visited:
                 visited.add(new_state_hash)
                 stack.append((new_state, new_path, current_depth + 1))
    
-    if old_path:
-        print(f"Best solution has {len(old_path)} moves")
+    # Report results
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    
+    print(f"\nDFS search completed:")
+    print(f"States checked: {states_checked}")
+    print(f"Max stack size: {max_stack_size}")
+    print(f"Time taken: {elapsed_time:.2f} seconds")
+    
+    if best_solution:
+        print(f"Best solution has {len(best_solution)} moves")
     else:
-        print(f"No solution found within depth limit {maxDepth}")
+        print(f"No solution found within depth limit {max_depth}")
    
-    return old_path
+    return best_solution or []
