@@ -6,106 +6,97 @@ from models.branch import Branch
 from models.bird import Bird
 from states.gameState import GameState
 
-
 #################################################################
 #                      Depth limited Search                     #
 #################################################################
 # https://www.geeksforgeeks.org/depth-limited-search-for-ai/    #
 #################################################################
-def find_solution(self, maxDepth = -1):
-        print(f"No solution found within depth limit {maxDepth}")
+def find_solution(self, maxDepth=200): # TODO: Might need to change maxDepth
+	goal = depth_limited_search(TreeNode(GameState(self.branches)), 0, 0, [], maxDepth) # FIXME: This value is hardcoded (use maxDepth)
+	path = trace_path(goal)
+	
+	path = [(p[0], p[1]) for p in path[1:]]
+	p = path[0] 
+	self.solution_path = path
+	if goal == None:
+	 	print("No solution found!")
+	else:
+	    trace_path(goal)
+	return path
 
-        return 1
-
+# TODO: REMOVE (This is the same as expand_states from algo_utils.py, but imports are not working for some reason)
+def child_branch_states(game_state):
+    assert isinstance(game_state, GameState)
+    next_states = []
+    
+    for from_idx in range(len(game_state.branches)):
+        for to_idx in range(len(game_state.branches)):
+            if from_idx == to_idx:
+                continue
+            
+            new_state = game_state.clone()
+            
+            if new_state.apply_move(from_idx, to_idx):
+                next_states.append((new_state, from_idx, to_idx))
+    return next_states
+        
 # A generic definition of a tree node holding a state of the problem
+#TODO: Move this to a different file (imports are not working for some reason)
 class TreeNode:
-    def __init__(self, state, parent=None):
+    def __init__(self, state, from_idx=None, to_idx=None, parent=None):
         self.state = state
+        self.from_idx = from_idx
+        self.to_idx = to_idx
         self.parent = parent
         self.children = []
 
     def add_child(self, child_node):
         self.children.append(child_node)
         child_node.parent = self
+    
+    def set_parent(self, parent_node):
+        self.parent = parent_node
+    
+    def __eq__(self, other):
+        if not isinstance(other, TreeNode):
+            return False
+        if (self.state != other.state):
+            return False
+        return True
         
 
-def depth_limited_search(initial_state, goal_state_func, operators_func, visited, depth_limit):
-    if initial_state in visited:  
+def depth_limited_search(initial_node, goal_state_func, operators_func, visited, depth_limit):
+    if initial_node in visited:  
         return None  # Avoid cycles
     
-    node = TreeNode(initial_state)   # create the root node in the search tree   
-    visited.append(initial_state)  # Mark state as visited 
+    visited.append(initial_node)  # Mark state as visited 
     
-    if goal_state_func(node.state):   # check goal state
-        return node
+    if initial_node.state.is_solved():   # check goal state
+        print("Goal state found!")
+        return initial_node
     elif depth_limit == 0:
         return None    
     else:
-        for state in operators_func(node.state):   # go through next states
+        for (state, from_idx, to_idx) in child_branch_states(initial_node.state):   # go through next states
             # create tree node with the new state
-            child = TreeNode(state, parent=node)
-            node.add_child(child)
+            child = TreeNode(state, from_idx, to_idx, initial_node)
+            child.set_parent(initial_node)
+            initial_node.add_child(child)
                     
-            result = depth_limited_search(child.state, goal_state_func, operators_func, visited, depth_limit-1)
+            result = depth_limited_search(child, goal_state_func, operators_func, visited, depth_limit-1)
             if result:  # If a solution was found, return it immediately
                 return result  
     return None
 
-def print_sol(goal):
-    if (goal != None):
-        print(goal.state)
+def trace_path(node):
+    parent = node.parent
+    path = []
+    while parent is not None:
+        path.append((parent.from_idx, parent.to_idx, parent.state)) 
+        parent = parent.parent
     else:
-        print("No solution found.")
-
-b1 = Branch(0,0,0)
-b1.add_bird(Bird('blue'))
-b1.add_bird(Bird('yellow'))
-b1.add_bird(Bird('red'))
-b1.add_bird(Bird('yellow'))
-
-b2 = Branch(0,0,1)
-b2.add_bird(Bird('yellow'))
-b2.add_bird(Bird('green'))
-b2.add_bird(Bird('green'))
-b2.add_bird(Bird('blue'))
-
-b3 = Branch(0,0,2)
-b3.add_bird(Bird('red'))
-b3.add_bird(Bird('red'))
-b3.add_bird(Bird('green'))
-b3.add_bird(Bird('red'))
-
-b4 = Branch(0,0,3)
-b4.add_bird(Bird('blue'))
-b4.add_bird(Bird('yellow'))
-b4.add_bird(Bird('blue'))
-b4.add_bird(Bird('green'))
-
-b5 = Branch(0,0,4)
-
-b6 = Branch(0,0,5)
-
-s = GameState([b1, b2, b3, b4, b5, b6])
-
-# Define the goal state function
-def goal_func(state):
-    return s.goal_branch_state(state)
-
-# Define the operators function
-def op_func(state):
-    return s.child_branch_states(state)
-
-goal = depth_limited_search(s, op_func, goal_func, [], 10)
-
-def print_solution(node):    
-    if (node.parent != None):
-        print_solution(node.parent)
-    GameState.print_state(node.state)
-    return
-
-
-if goal == None:
-	print("No solution found!")
-else:
-	print_solution(goal)        
+        print("No solution found.") 
+    path.reverse()
+    path.append((node.from_idx, node.to_idx, node.state))
+    return path
 
