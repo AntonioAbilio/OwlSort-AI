@@ -9,7 +9,6 @@ from models.bird import Bird
 from models.branch import Branch
 from models.button import Button
 
-
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
@@ -20,13 +19,10 @@ from constants import (
 )
 
 from algorithms.dfs import *
-
 from states.gameState import GameState
 
 # Initialize pygame
 pygame.init()
-
-
 
 # Set up the screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -50,6 +46,9 @@ class Game(State):
         self.hint_from = None
         self.hint_to = None
         self.solution_path = None
+        
+        # Initialize the game state
+        self.game_state = GameState(self.branches)
         
     def setup_level(self):
         # Create branches with zigzag layout (left to right, top to bottom)
@@ -90,17 +89,7 @@ class Game(State):
                 if bird_index < len(all_birds):
                     branch.add_bird(all_birds[bird_index])
                     bird_index += 1
-        
-        print("Initial game setup complete")
-        self.print_game_state()
-    
-    def print_game_state(self):
-        """Print the current game state for debugging"""
-        print("\nCurrent Game State:")
-        for i, branch in enumerate(self.branches):
-            birds_colors = [f"{bird.color}" for bird in branch.birds]
-            print(f"  Branch {i}: {birds_colors}")
-    
+
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
@@ -143,169 +132,23 @@ class Game(State):
                 for i, branch in enumerate(self.branches):
                     if branch == self.selected_branch:
                         from_idx = i
-                
+
+
                 print(f"Attempting to move birds from branch {from_idx} to branch {clicked_index}")
-                success = self.try_move_birds(self.selected_branch, clicked_branch)
+                success = self.game_state.apply_move(from_idx,clicked_index)
+                
+                # success = self.try_move_birds(self.selected_branch, clicked_branch)
                 if success:
                     print("Move successful")
-                    self.print_game_state()
+                    # Add the move to the game state history
+                    self.game_state.move_history.append((from_idx, clicked_index))
+                    # Update the game state with current branches
+                    self.game_state = GameState(self.branches, self.game_state.move_history)
+                    self.moves += 1
                 else:
                     print("Move failed")
             self.selected_branch = None
-    
-    def try_move_birds(self, from_branch, to_branch):
-        # Check if move is valid
-        if not from_branch.birds or to_branch.is_completed:
-            print("Invalid move: source branch empty or target branch completed")
-            return False
-        
-        # Get the color of the topmost bird in the source branch
-        top_bird_color = from_branch.birds[-1].color
-        
-        # Find all birds of the same color in sequence from the top
-        birds_to_move = []
-        for i in range(len(from_branch.birds) - 1, -1, -1):
-            if from_branch.birds[i].color == top_bird_color:
-                birds_to_move.insert(0, from_branch.birds[i])
-            else:
-                break
-        
-        print(f"Attempting to move {len(birds_to_move)} birds of color {top_bird_color}")
-        
-        # Check if target branch can accept these birds
-        if not to_branch.birds:
-            # Empty branch can accept any birds if there's space
-            can_move = len(birds_to_move) <= MAX_BIRDS_PER_BRANCH - len(to_branch.birds)
-            print(f"Target branch is empty, can move: {can_move}")
-        else:
-            # Non-empty branch can only accept matching color birds if there's space
-            can_move = (to_branch.birds[-1].color == top_bird_color and len(to_branch.birds) < MAX_BIRDS_PER_BRANCH)
-            print(f"Target branch has color {to_branch.birds[-1].color}, can move: {can_move}")
-        
-        if can_move:
-            # Remove birds from source branch (in reverse to maintain order)
-            numBirdsToBeMoved = min(MAX_BIRDS_PER_BRANCH - len(to_branch.birds), len(birds_to_move))
-            for _ in range(numBirdsToBeMoved):
-                from_branch.birds.pop()
-            
-            # Add birds to target branch
-            for bird in birds_to_move:
-                to_branch.add_bird(bird)
-            
-            self.moves += 1
-            print(f"Move completed. Total moves: {self.moves}")
-            
-            # Check if the target branch is now complete
-            if to_branch.check_completion():
-                self.completed_branches += 1
-                print(f"Branch completed! Total completed: {self.completed_branches}")
-                
-            # Check if the user has actually used the hint.
-            if self.solution_path:
-                oldState = (self.branches.index(from_branch), self.branches.index(to_branch))
-                if self.solution_path[0] == oldState:
-                    self.solution_path.popleft()
-                else:
-                    self.solution_path = None
 
-            return True
-        
-        return False
-    
-    def is_valid_move(self, from_branch, to_branch):
-        """Check if a move from one branch to another is valid without actually moving birds."""
-        if not from_branch.birds or from_branch.is_completed or to_branch.is_completed:
-            return False
-        
-        top_bird_color = from_branch.birds[-1].color
-        
-        # Count birds of same color at top
-        birds_to_move_count = 0
-        for i in range(len(from_branch.birds) - 1, -1, -1):
-            if from_branch.birds[i].color == top_bird_color:
-                birds_to_move_count += 1
-            else:
-                break
-        
-        if not to_branch.birds:
-            # Empty branch can accept any birds if there's space
-            return birds_to_move_count <= MAX_BIRDS_PER_BRANCH
-        else:
-            # Non-empty branch needs matching color and sufficient space
-            return (to_branch.birds[-1].color == top_bird_color and len(to_branch.birds) > 0)
-    
-    def is_game_won(self, branches=None):
-        """Check if game is won (all color groups completed)."""
-        if branches is None:
-            branches = self.branches
-            
-        completed_count = 0
-        for branch in branches:
-            if len(branch.birds) == MAX_BIRDS_PER_BRANCH:
-                if all(bird.color == branch.birds[0].color for bird in branch.birds):
-                    completed_count += 1
-        
-        return completed_count == len(COLORS)
-    
-    def clone_branches(self, source_branches=None):
-        """Create a deep copy of the branches for BFS."""
-        if source_branches is None:
-            source_branches = self.branches
-            
-        new_branches = []
-        for branch in source_branches:
-            new_branch = Branch(branch.x, branch.y, branch.id)
-            new_branch.side = branch.side
-            new_branch.is_completed = branch.is_completed
-            # Copy birds
-            for bird in branch.birds:
-                new_bird = Bird(bird.color)
-                new_branch.birds.append(new_bird)
-            new_branches.append(new_branch)
-        return new_branches
-    
-    def apply_move(self, branches, from_idx, to_idx):
-        """Apply a move to a copied set of branches."""
-        from_branch = branches[from_idx]
-        to_branch = branches[to_idx]
-        
-        if not from_branch.birds:
-            return False
-        
-        top_bird_color = from_branch.birds[-1].color
-        
-        # Find birds to move
-        birds_to_move = []
-        for i in range(len(from_branch.birds) - 1, -1, -1):
-            if from_branch.birds[i].color == top_bird_color:
-                birds_to_move.insert(0, from_branch.birds[i])
-            else:
-                break
-        
-        # Check if we can move
-        if not to_branch.birds:
-            can_move = len(birds_to_move) <= MAX_BIRDS_PER_BRANCH - len(to_branch.birds)
-        else:
-            can_move = (to_branch.birds[-1].color == top_bird_color and 
-                       len(birds_to_move) <= MAX_BIRDS_PER_BRANCH - len(to_branch.birds))
-        
-        if can_move:
-            # Move the birds
-            for _ in range(len(birds_to_move)):
-                from_branch.birds.pop()
-            
-            for bird in birds_to_move:
-                to_branch.add_bird(bird)
-                
-            # Check completion
-            if len(to_branch.birds) == MAX_BIRDS_PER_BRANCH:
-                if all(bird.color == to_branch.birds[0].color for bird in to_branch.birds):
-                    to_branch.is_completed = True
-            
-            return True
-            
-        return False
-    
     def print_move(self, from_idx, to_idx):
         from_branch = self.branches[from_idx]
 
@@ -315,24 +158,16 @@ class Game(State):
         else:
             print(f"Invalid Move: Branch {from_idx} is empty")
 
-
-    
     def get_hint(self):
-        """Get a hint for the next move."""
-        print("Getting hint...")
-
-        # Check if the last move was made using the hint
-        # If so then use the list of the saved solutions
-        
         solver = Solver(Algorithm.DFS) #TODO: make this be changable, not hardcoded 
 
         if not(self.solution_path):
+            # Use the game state for the solver
             self.solution_path = solver.find_solution(self)
         else: # TODO: remove else, only for debug
             print("Now using cached solution")
 
         if self.solution_path and len(self.solution_path) > 0:
-            # Get the next move from the solution
             print(self.solution_path)
             from_idx, to_idx = self.solution_path[0]
             print(f"Hint suggests moving from branch {from_idx} to {to_idx}")
@@ -341,15 +176,20 @@ class Game(State):
         else:
             print("No hint available - couldn't find solution")
     
+    def is_game_over(self): #TODO: add a state for stalemate
+        if(self.game_state.is_solved()):
+            return 1
+        else:
+            return 0
+
+
     def update(self):
         pass
     
     def draw(self, surface):
-        # Clear screen
         surface.fill((135, 206, 235))  # Sky blue background
         
-        # Draw all branches
-        for branch in self.branches:
+        for branch in self.branches: #TODO: make this use the updated textures
             branch.draw(surface)
         
         # Highlight selected branch
@@ -377,7 +217,7 @@ class Game(State):
         surface.blit(help_text, (SCREEN_WIDTH//2 - 240, 20))
         
         # Check if player won
-        if self.completed_branches == len(COLORS):
+        if (self.is_game_over() == 1):
             # Draw semi-transparent overlay
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 128))
@@ -392,3 +232,8 @@ class Game(State):
             moves_result = self.font.render(f"Total Moves: {self.moves}", True, (255, 255, 255))
             moves_rect = moves_result.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2 + 60))
             surface.blit(moves_result, moves_rect)
+    
+    def get_game_state(self):
+        """Return the current game state."""
+        return self.game_state
+    
