@@ -1,20 +1,13 @@
+from models.branch import Branch
+from models.bird import Bird
+
 class GameState:
     def __init__(self, branches, move_history=None):
-        """
-        Initialize a game state object to track the state of branches and move history.
-        
-        Parameters:
-        branches - List of Branch objects representing the current game state
-        move_history - List of (from_idx, to_idx) tuples representing the sequence of moves made
-        """
+        assert isinstance(branches, list)
         self.branches = branches
         self.move_history = move_history if move_history is not None else []
        
     def __eq__(self, other):
-        """
-        Compare two GameState objects for equality.
-        Two GameStates are equal if all their branches contain the same birds in the same order.
-        """
         if not isinstance(other, GameState):
             return False
         if len(self.branches) != len(other.branches):
@@ -25,31 +18,19 @@ class GameState:
         return True
    
     def __hash__(self):
-        """
-        Create a hashable representation of the state.
-        This is useful for using GameState as a key in dictionaries or sets.
-        """
-        # Create a hashable representation of the state
         state_tuple = tuple(tuple((bird.color) for bird in branch.birds) for branch in self.branches)
         return hash(state_tuple)
    
     def print_state(self):
-        """Print the current state for debugging"""
         print("GameState:")
         for i, branch in enumerate(self.branches):
             birds_colors = [f"{bird.color}" for bird in branch.birds]
             print(f"  Branch {i}: {birds_colors}")
     
     def clone(self):
-        """
-        Create a deep copy of this GameState.
-        Useful for exploring possible future states without modifying the original.
-        """
-        from models.branch import Branch
-        from models.bird import Bird
-        
-        # Clone branches
+
         new_branches = []
+
         for branch in self.branches:
             new_branch = Branch(branch.x, branch.y, branch.id)
             new_branch.side = branch.side
@@ -62,7 +43,6 @@ class GameState:
             
             new_branches.append(new_branch)
         
-        # Return a new GameState with cloned branches and copied move history
         return GameState(new_branches, self.move_history.copy())
     
     def apply_move(self, from_idx, to_idx): 
