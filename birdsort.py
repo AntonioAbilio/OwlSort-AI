@@ -1,12 +1,14 @@
 import pygame 
 import sys
 import random
+from algorithms.algorithm_picker import Algorithm, Solver
 from state_manager import State
 from collections import deque
 
 from models.bird import Bird
 from models.branch import Branch
 from models.button import Button
+
 
 from constants import (
     SCREEN_WIDTH,
@@ -17,7 +19,7 @@ from constants import (
     COLORS
 )
 
-from utils.algorithms import *
+from algorithms.dfs import *
 
 from states.gameState import GameState
 
@@ -305,9 +307,8 @@ class Game(State):
         return False
     
     def print_move(self, from_idx, to_idx):
-        """Print a move for debugging"""
         from_branch = self.branches[from_idx]
-        to_branch = self.branches[to_idx]
+
         if from_branch.birds:
             top_color = from_branch.birds[-1].color
             print(f"Move: Branch {from_idx} -> Branch {to_idx} (Color: {top_color})")
@@ -322,9 +323,11 @@ class Game(State):
 
         # Check if the last move was made using the hint
         # If so then use the list of the saved solutions
+        
+        solver = Solver(Algorithm.DFS) #TODO: make this be changable, not hardcoded 
 
         if not(self.solution_path):
-            self.solution_path = find_solution_dfs(self)
+            self.solution_path = solver.find_solution(self)
         else: # TODO: remove else, only for debug
             print("Now using cached solution")
 
@@ -389,28 +392,3 @@ class Game(State):
             moves_result = self.font.render(f"Total Moves: {self.moves}", True, (255, 255, 255))
             moves_rect = moves_result.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2 + 60))
             surface.blit(moves_result, moves_rect)
-
-def main():
-    game = Game()
-    print("Game initialized. Press the hint button to test BFS algorithm.")
-    
-    # Main game loop
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            game.handle_event(event)
-        
-        game.update()
-        game.draw(screen)
-        
-        pygame.display.flip()
-        clock.tick(60)
-    
-    pygame.quit()
-    sys.exit()
-
-if __name__ == "__main__":
-    main()
-    

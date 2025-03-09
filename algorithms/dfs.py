@@ -2,7 +2,14 @@ import sys
 from collections import deque
 from states.gameState import GameState
 
-def find_solution_dfs(self, maxDepth = -1):
+#################################################################
+#                      DEPTH FIRST SEARCH                       #
+#################################################################
+# This algorithm will search deep until it finds a solution,    #
+# This is NOT optimal but it does have a low spacial complexity #
+#################################################################
+
+def find_solution(self, maxDepth = -1):
         """Use DFS to find a solution path."""
         print(f"\n=== Finding solution with DFS (maxDepth={maxDepth}) ===")
         if self.solution_path:
