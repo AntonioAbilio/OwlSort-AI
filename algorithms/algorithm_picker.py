@@ -15,7 +15,9 @@ class Solver():
     def find_solution(self, game_state):
         assert isinstance(game_state, GameState)
         assert isinstance(game_state.move_history, list)
-        if self.algorithm:
+
+        try:
             return self.algorithm(game_state)
-        else:
-            print(f"[ERROR!] algorithm '{self.algorithm}' not found!")
+        except Exception as e:
+            print(f"[ERROR!] Solve Algorithm not found! {e}")
+            return []
