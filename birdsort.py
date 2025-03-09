@@ -159,11 +159,11 @@ class Game(State):
             print(f"Invalid Move: Branch {from_idx} is empty")
 
     def get_hint(self):
-        solver = Solver(Algorithm.DFS) #TODO: make this be changable, not hardcoded 
+        solver = Solver(Algorithm.ASTAR) #TODO: make this be changable, not hardcoded 
 
-        if not(self.solution_path):
+        if not(self.solution_path == self.game_state.move_history): #TODO: change how caching is being done!
             # Use the game state for the solver
-            self.solution_path = solver.find_solution(self)
+            self.solution_path = solver.find_solution(GameState(self.branches))
         else: # TODO: remove else, only for debug
             print("Now using cached solution")
 
