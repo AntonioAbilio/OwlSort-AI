@@ -1,6 +1,9 @@
 import sys
 from collections import deque
 from states.gameState import GameState
+from constants import MAX_BIRDS_PER_BRANCH, COLORS
+from models.bird import Bird
+from models.branch import Branch
 
 def find_best_start_branches(state):
     """An heuristic that opts to use the maximum number of contiguous birds
@@ -137,80 +140,66 @@ def find_solution_dfs_with_heuristics(self):
         print(f"No solution found")
     return old_path
 
-def find_solution_dfs(self, maxDepth = -1):
-        """Use DFS to find a solution path."""
-        print(f"\n=== Finding solution with DFS (maxDepth={maxDepth}) ===")
-        if self.solution_path:
-            print("Using existing solution path")
-            return self.solution_path
 
-        # Create a starting state
-        start_branches = self.clone_branches()
-        start_state = GameState(start_branches)
+def find_solution_dfs(self):
+    """Use DFS to find the shortest solution path."""
+    if self.solution_path:
+        return self.solution_path
+    
+    start_branches = self.clone_branches()
+    start_state = GameState(start_branches)
 
-        print("Initial state for DFS:")
-        start_state.print_state()
+    # Setup for DFS
+    # (state, move_path)
+    stack = [(start_state, deque())]
+    
+    # {state: lengthOfPathToReachState}
+    visited = {hash(start_state): 0}
 
-        # Setup for DFS
-        stack = [(start_state, deque(), 0)]  # (state, move_path, depth)
-        visited = set([hash(start_state)])  # Use hash to track visited states
+    best_path = None
+    best_path_length = sys.maxsize
 
-        old_path = []
-        old_path_size = sys.maxsize
+    while stack:
+        current_state, current_path = stack.pop()
 
-        states_checked = 0
-        max_stack_size = 1
+        # Check if this is a winning state
+        if self.is_game_won(current_state.branches):
+            if len(current_path) < best_path_length:
+                print("Found new path, old was", best_path_length, "and new is", len(current_path))
+                best_path = current_path
+                best_path_length = len(current_path)
+            continue # Continue to search
 
-        while stack:
-            states_checked += 1
-            if states_checked % 100 == 0:
-                print(f"DFS progress: {states_checked} states checked, stack size: {len(stack)}")
+        # Try all possible moves
+        for from_idx in range(len(current_state.branches)):
+            for to_idx in range(len(current_state.branches)):
+                if from_idx == to_idx:
+                    continue
 
-            max_stack_size = max(max_stack_size, len(stack))
-            current_state, current_path, current_depth = stack.pop()
+                from_branch = current_state.branches[from_idx]
+                to_branch = current_state.branches[to_idx]
 
-            # Check if this is a winning state
-            if self.is_game_won(current_state.branches):
-                print(f"Solution found! Path length: {len(current_path)}")
-                print(f"DFS stats: {states_checked} states checked, max stack size: {max_stack_size}")
-                
-                if len(current_path) < old_path_size:
-                    print("Found new path, old was ", old_path, " and new is ", current_path)
-                    old_path = current_path
-                    old_path_size = len(current_path)
-                continue
+                if self.is_valid_move(from_branch, to_branch):
 
-            # Stop exploring if we've reached the maximum depth
-            if maxDepth != -1 and current_depth >= maxDepth:
-                continue
+                    # Clone current state and apply the move
+                    new_branches = self.clone_branches(current_state.branches)
+                    success = self.apply_move(new_branches, from_idx, to_idx)
+                    if success:
 
-            # Try all possible moves
-            for from_idx in range(len(current_state.branches)):
-                for to_idx in range(len(current_state.branches)):
-                    if from_idx == to_idx:
-                        continue
+                        new_state = GameState(new_branches)
+                        new_path = current_path + deque([(from_idx, to_idx)])
 
-                    from_branch = current_state.branches[from_idx]
-                    to_branch = current_state.branches[to_idx]
+                        new_state_hash = hash(new_state)
+                        
+                        # Check if we've seen this state before
+                        # But also check if this path that led to the same state has a shorter way than before.
+                        # No negative weights so this is valid...
+                        if new_state_hash not in visited or len(new_path) < visited[new_state_hash]:
+                            visited[new_state_hash] = len(new_path)
+                            stack.append((new_state, new_path))
 
-                    if self.is_valid_move(from_branch, to_branch):
-                        # Create a new state by cloning the current one
-                        new_branches = self.clone_branches(current_state.branches)
-
-                        # Apply the move
-                        success = self.apply_move(new_branches, from_idx, to_idx)
-                        if success:
-                            new_state = GameState(new_branches)
-                            new_path = current_path + deque([(from_idx, to_idx)])
-
-                            # Check if we've seen this state before
-                            new_state_hash = hash(new_state)
-                            if new_state_hash not in visited:
-                                visited.add(new_state_hash)
-                                stack.append((new_state, new_path, current_depth + 1))
-        
-        if old_path:
-            print(f"Best solution has {len(old_path)} moves")
-        else:
-            print(f"No solution found within depth limit {maxDepth}")
-        return old_path
+    if best_path:
+        print(f"Best solution has {len(best_path)} moves")
+    else:
+        print("No solution found")
+    return best_path
