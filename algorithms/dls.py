@@ -12,4 +12,4 @@ from states.gameState import GameState
 def find_solution(self, maxDepth = -1):
         print(f"No solution found within depth limit {maxDepth}")
 
-        return 1
+        return []
