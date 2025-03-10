@@ -1,83 +1,125 @@
+import sys
 from algorithms import algo_utils
 from collections import deque
 from states.gameState import GameState
-from algorithms import algo_utils
-import time
+from models.bird import Bird
+from models.branch import Branch
 
-def find_solution(game_state, max_depth=-1):
-    """
-    Use Depth-First Search to find a solution path.
-    
-    Parameters:
-    game_state - The initial GameState
-    max_depth - Maximum search depth, -1 for unlimited
-    
-    Returns:
-    A list of moves [(from_idx, to_idx), ...] representing the solution path
-    """
-    import sys
-    
-    start_time = time.time()
-    print(f"\n=== Finding solution with DFS (maxDepth={max_depth}) ===")
-    
-    # Check if already solved
-    if game_state.is_solved():
-        print("Game is already solved!")
-        return []
-   
+def find_solution(self):
+    """Use DFS to find the shortest solution path."""
+
+    start_branches = self.clone()
+    start_state = GameState(start_branches)
+
     # Setup for DFS
-    stack = [(game_state, [], 0)]  # (state, move_path, depth)
-    visited = set([hash(game_state)])  # Use hash to track visited states
-    best_solution = None
-    best_solution_length = sys.maxsize
-    states_checked = 0
-    max_stack_size = 1
-   
+    # (state, move_path)
+    stack = [(start_state, deque())]
+
+    # {state: lengthOfPathToReachState}
+    visited = {hash(start_state): 0}
+
+    best_path = None
+    best_path_length = sys.maxsize
+
     while stack:
-        states_checked += 1
-        if states_checked % 100 == 0:
-            print(f"DFS progress: {states_checked} states checked, stack size: {len(stack)}")
-       
-        max_stack_size = max(max_stack_size, len(stack))
-        current_state, current_path, current_depth = stack.pop()
-       
+        current_state, current_path = stack.pop()
+
         # Check if this is a winning state
-        if current_state.is_solved():
-            # Found a solution
-            if len(current_path) < best_solution_length:
-                print(f"New solution found! Path length: {len(current_path)}")
-                if best_solution:
-                    print(f"Previous best was: {best_solution_length}")
-                best_solution = current_path
-                best_solution_length = len(current_path)
-            continue
-       
-        # Stop exploring if we've reached the maximum depth
-        if max_depth != -1 and current_depth >= max_depth:
-            continue
-       
-        # Expand this state (reversed order for DFS to prioritize first branches)
-        next_states = algo_utils.expand_states(current_state)
-        for new_state, from_idx, to_idx in reversed(next_states):
-            new_path = current_path + [(from_idx, to_idx)]
-            new_state_hash = hash(new_state)
-            
-            if new_state_hash not in visited:
-                visited.add(new_state_hash)
-                stack.append((new_state, new_path, current_depth + 1))
-   
-    # Report results
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    
-    print(f"\nDFS search completed:")
-    print(f"States checked: {states_checked}")
-    print(f"Max stack size: {max_stack_size}")
-    print(f"Time taken: {elapsed_time:.2f} seconds")
-    
-    if best_solution:
-        print(f"Best solution has {len(best_solution)} moves")
+        if self.is_game_won(current_state.branches):
+            if len(current_path) < best_path_length:
+                print("Found new path, old was", best_path_length, "and new is", len(current_path))
+                best_path = current_path
+                best_path_length = len(current_path)
+            continue # Continue to search
+
+        # Try all possible moves
+        for from_idx in range(len(current_state.branches)):
+            for to_idx in range(len(current_state.branches)):
+                if from_idx == to_idx:
+                    continue
+
+                from_branch = current_state.branches[from_idx]
+                to_branch = current_state.branches[to_idx]
+
+                if self.is_valid_move(from_branch, to_branch):
+
+                    # Clone current state and apply the move
+                    new_branches = self.clone(current_state.branches)
+                    success = self.apply_move(new_branches, from_idx, to_idx)
+                    if success:
+
+                        new_state = GameState(new_branches)
+                        new_path = current_path + deque([(from_idx, to_idx)])
+
+                        new_state_hash = hash(new_state)
+
+                        # Check if we've seen this state before
+                        # But also check if this path that led to the same state has a shorter way than before.
+                        # No negative weights so this is valid...
+                        if new_state_hash not in visited or len(new_path) < visited[new_state_hash]:
+                            visited[new_state_hash] = len(new_path)
+                            stack.append((new_state, new_path))
+
+    if best_path:
+        print(f"Best solution has {len(best_path)} moves")
     else:
-        print(f"No solution found within depth limit {max_depth}")
-   
-    return best_solution or []
+        print("No solution found")
+    return best_path
+
+
+def find_best_start_branches(state):
+    """An heuristic that opts to use the maximum number of contiguous birds
+    as a reference point to wether or not we found a good starting branch."""
+
+    maxContiguousBirds = 0
+    best_branches = []
+
+    branches = state.branches
+    for branch_idx in range(len(branches)):
+
+        birds = branches[branch_idx].birds[::-1] # We want to start from the front to the back of the branch.
+
+        if len(birds) == 0: # Branch is empty
+            continue
+
+        bird_colors = list(map(lambda bird: bird.color, birds))
+
+        firstColor = bird_colors[0] # We can only move birds that are the same color as the first one.
+        contiguousBirds = 1
+
+        for remainingColor in bird_colors[1::]: # Determine how many birds of the same color are "connected".
+            if (remainingColor == firstColor):
+                contiguousBirds += 1
+            else:
+                break # As soon as we find a bird that is a different color stop counting
+
+        if (contiguousBirds > maxContiguousBirds): # The more birds that we can move the better.
+            best_branches.append((branch_idx, contiguousBirds)) # Save the current best branch.
+
+    # Sort in descending order of contiguousBirds.
+    best_branches.sort(key=lambda x: x[1], reverse=True)
+
+    return [branch_tuple[0] for branch_tuple in best_branches] # Return only branch indexes.
+
+def find_best_ending_branches(state):
+    """An heuristic that opts to order branches by the amount of birds that they can still hold"""
+
+    # TODO: Finish
+    # Best case: First bird has matching color and the branches have little birds
+    # Meh case: First bird has matching color
+    # Worst case: Branch is empty
+
+
+    branches = state.branches
+    best_branches = []
+
+    for branch_idx in range(len(branches)):
+        bird_count = len(branches[branch_idx].birds)
+        best_branches.append((branch_idx, bird_count))
+
+    # Sort in ascending order of bird_count.
+    # This means that branches with less birds (therefor more space) will be offered first.
+    best_branches.sort(key=lambda x: x[1], reverse=True)
+
+    return [branch_tuple[0] for branch_tuple in best_branches] # Return only branch indexes
+
