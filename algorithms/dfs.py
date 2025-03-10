@@ -8,8 +8,7 @@ from models.branch import Branch
 def find_solution(self):
     """Use DFS to find the shortest solution path."""
 
-    start_branches = self.clone()
-    start_state = GameState(start_branches)
+    start_state = self.clone()
 
     # Setup for DFS
     # (state, move_path)
@@ -25,7 +24,7 @@ def find_solution(self):
         current_state, current_path = stack.pop()
 
         # Check if this is a winning state
-        if self.is_game_won(current_state.branches):
+        if current_state.is_solved():
             if len(current_path) < best_path_length:
                 print("Found new path, old was", best_path_length, "and new is", len(current_path))
                 best_path = current_path
@@ -41,24 +40,23 @@ def find_solution(self):
                 from_branch = current_state.branches[from_idx]
                 to_branch = current_state.branches[to_idx]
 
-                if self.is_valid_move(from_branch, to_branch):
+                #if self.is_valid_move(from_branch, to_branch):
 
-                    # Clone current state and apply the move
-                    new_branches = self.clone(current_state.branches)
-                    success = self.apply_move(new_branches, from_idx, to_idx)
-                    if success:
+                # Clone current state and apply the move
+                new_state = current_state.clone()
+                success = new_state.apply_move(from_idx, to_idx)
+                if success:
 
-                        new_state = GameState(new_branches)
-                        new_path = current_path + deque([(from_idx, to_idx)])
+                    new_path = current_path + deque([(from_idx, to_idx)])
 
-                        new_state_hash = hash(new_state)
+                    new_state_hash = hash(new_state)
 
-                        # Check if we've seen this state before
-                        # But also check if this path that led to the same state has a shorter way than before.
-                        # No negative weights so this is valid...
-                        if new_state_hash not in visited or len(new_path) < visited[new_state_hash]:
-                            visited[new_state_hash] = len(new_path)
-                            stack.append((new_state, new_path))
+                    # Check if we've seen this state before
+                    # But also check if this path that led to the same state has a shorter way than before.
+                    # No negative weights so this is valid...
+                    if new_state_hash not in visited or len(new_path) < visited[new_state_hash]:
+                        visited[new_state_hash] = len(new_path)
+                        stack.append((new_state, new_path))
 
     if best_path:
         print(f"Best solution has {len(best_path)} moves")
