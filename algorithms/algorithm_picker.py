@@ -1,18 +1,25 @@
 from enum import Enum
 
-from algorithms import dfs, dls, it_deep
+from states.gameState import GameState
+from algorithms import bfs, dfs, dls, astar, it_deep
 
 class Algorithm(Enum):
-    DFS = dfs.find_solution
-    DLS = dls.find_solution
+    BFS     = bfs.find_solution
+    DFS     = dfs.find_solution
+    DLS     = dls.find_solution
+    ASTAR   = astar.find_solution
     IT_DEEP = it_deep.find_solution
 
 class Solver():
     def __init__(self, algorithm):
         self.algorithm = algorithm
 
-    def find_solution(self, gameState):
-        if self.algorithm:
-            return self.algorithm(gameState)
-        else:
-            print(f"[ERROR!] algorithm '{self.algorithm}' not found!")
+    def find_solution(self, game_state):
+        assert isinstance(game_state, GameState)
+        assert isinstance(game_state.move_history, list)
+
+        try:
+            return self.algorithm(game_state)
+        except Exception as e:
+            print(f"[ERROR!] Solve Algorithm not found! {e}")
+            return []

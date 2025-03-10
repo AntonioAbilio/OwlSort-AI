@@ -3,9 +3,10 @@ from models.bird import Bird
 
 class GameState:
     def __init__(self, branches, move_history=None):
-        assert isinstance(branches, list)
         self.branches = branches
         self.move_history = move_history if move_history is not None else []
+        assert isinstance(self.branches, list)
+        assert isinstance(self.move_history, list)
        
     def __eq__(self, other):
         if not isinstance(other, GameState):
@@ -95,11 +96,13 @@ class GameState:
         return False
     
     def get_move_history(self):
+        assert isinstance(self.move_history, list)
         return self.move_history
     
     def get_number_of_moves(self):
-        return self.move_history.__len__
-    
+        assert isinstance(self.move_history, list)
+        return len(self.move_history)
+
     def is_solved(self):
         from constants import COLORS
         from constants import MAX_BIRDS_PER_BRANCH

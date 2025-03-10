@@ -38,5 +38,3 @@ def depth_limited_search(initial_node, goal_state_func, operators_func, visited,
             if result:  # If a solution was found, return it immediately
                 return result  
     return None
-
-
