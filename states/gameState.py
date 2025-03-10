@@ -3,6 +3,7 @@ from models.bird import Bird
 
 class GameState:
     def __init__(self, branches, move_history=None):
+        self.branch_cap = 4
         self.branches = branches
         self.move_history = move_history if move_history is not None else []
         assert isinstance(self.branches, list)
@@ -47,15 +48,20 @@ class GameState:
         return GameState(new_branches, self.move_history.copy())
     
     def apply_move(self, from_idx, to_idx): 
-        #this will try to move, if it does it updates itself and returns true, if it cant it returns false
+        '''this will try to move, if it does it updates itself and returns true, if it cant it returns false'''
         from_branch = self.branches[from_idx]
         to_branch = self.branches[to_idx]
         
-        if not from_branch.birds or to_branch.is_completed:
+        # Check if we can apply the move
+        if not from_branch.birds or from_branch.is_completed: # Source branch is empty or complete
             return False
-        
+        if len(to_branch.birds) >= self.branch_cap: # Destination branch is full 
+            return False
         # Get the color of the topmost bird in the source branch
         top_bird_color = from_branch.birds[-1].color
+        if to_branch.birds:
+            if (to_branch.birds[-1].color != top_bird_color): # Top color does not match
+                return False
         
         # Find all birds of the same color in sequence from the top
         birds_to_move = []
@@ -64,36 +70,27 @@ class GameState:
                 birds_to_move.insert(0, from_branch.birds[i])
             else:
                 break
+        numBirdsToBeMoved = min(self.branch_cap - len(to_branch.birds), len(birds_to_move)) 
+        birds_to_move = birds_to_move[:numBirdsToBeMoved] # Remove birds that can't move
+                
+        # Remove birds from source branch
+        for _ in range(len(birds_to_move)):
+            from_branch.birds.pop()
         
-        # Check if target branch can accept these birds
-        if not to_branch.birds:
-            # Empty branch can accept any birds if there's space
-            can_move = len(birds_to_move) <= (4 - len(to_branch.birds))  # Assuming MAX_BIRDS_PER_BRANCH is 4
-        else:
-            # Non-empty branch can only accept matching color birds if there's space
-            can_move = (to_branch.birds[-1].color == top_bird_color and 
-                       len(birds_to_move) <= (4 - len(to_branch.birds)))
+        # Add birds to target branch
+        for bird in birds_to_move:
+            to_branch.add_bird(bird)
         
-        if can_move:
-            # Remove birds from source branch
-            for _ in range(len(birds_to_move)):
-                from_branch.birds.pop()
-            
-            # Add birds to target branch
-            for bird in birds_to_move:
-                to_branch.add_bird(bird)
-            
-            # Record the move in the history
-            self.move_history.append((from_idx, to_idx))
-            
-            # Check completion
-            if len(to_branch.birds) == 4:  # Assuming MAX_BIRDS_PER_BRANCH is 4
-                if all(bird.color == to_branch.birds[0].color for bird in to_branch.birds):
-                    to_branch.is_completed = True
-            
+        # Record the move in the history
+        self.move_history.append((from_idx, to_idx))
+        
+        # Check completion
+        if len(to_branch.birds) == self.branch_cap:  # Assuming MAX_BIRDS_PER_BRANCH is 4
+            if all(bird.color == to_branch.birds[0].color for bird in to_branch.birds):
+                to_branch.is_completed = True
 
-            return True
-        return False
+        return True
+
     
     def get_move_history(self):
         assert isinstance(self.move_history, list)
