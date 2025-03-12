@@ -4,6 +4,8 @@ import random
 from algorithms.algorithm_picker import Algorithm, Solver
 from state_manager import State
 from collections import deque
+from algorithms.solution_cache import SolutionCache
+
 
 from models.bird import Bird
 from models.branch import Branch
@@ -31,6 +33,9 @@ class Game(State):
         self.moves = 0
         self.completed_branches = 0
         self.font = pygame.font.SysFont(None, 36)
+
+        self.solution_cache = SolutionCache()
+        self.last_algorithm = None
         
         # Create hint buttons
         self.hint_buttons = []
@@ -154,6 +159,8 @@ class Game(State):
                 # success = self.try_move_birds(self.selected_branch, clicked_branch)
                 if success:
                     print("Move successful")
+                    if self.last_algorithm is not None:
+                        self.solution_cache.update_after_move(self.game_state, (from_idx, clicked_index))
                     # Add the move to the game state history
                     self.game_state.move_history.append((from_idx, clicked_index))
                     # Update the game state with current branches
@@ -173,13 +180,20 @@ class Game(State):
             print(f"Invalid Move: Branch {from_idx} is empty")
 
     def get_hint(self, algorithm):
-        solver = Solver(algorithm)  # TODO: make this be changeable, not hardcoded 
+        # Check if we already have a cached solution for this state and algorithm
+        self.solution_path = self.solution_cache.get_solution(self.game_state, algorithm)
+        
 
-        if not(self.solution_path == self.game_state.move_history):  # TODO: change how caching is being done!
-            # Use the game state for the solver
+        if self.solution_path is None:
+            solver = Solver(algorithm)
             self.solution_path = solver.find_solution(GameState(self.branches))
-        else:  # TODO: remove else, only for debug
-            print("Now using cached solution")
+            
+            # Cache the solution
+            self.solution_cache.store_solution(self.game_state, algorithm, self.solution_path)
+        else:
+            print(f"Using cached solution")
+        
+        self.last_algorithm = algorithm
 
         if self.solution_path and len(self.solution_path) > 0:
             print(self.solution_path)
