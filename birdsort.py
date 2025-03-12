@@ -24,11 +24,14 @@ from states.gameState import GameState
 
 
 class Game(State):
-    def __init__(self, num_branches):
+    def __init__(self, num_branches, bird_list=[], is_custom=False):
         super().__init__()
         self.branches = []
         self.selected_branch = None
-        self.setup_level(num_branches)
+        if (is_custom):
+            self.setup_custom_level(bird_list)
+        else:
+            self.setup_level(num_branches)
         self.moves = 0
         self.completed_branches = 0
         self.font = pygame.font.SysFont(None, 36)
@@ -63,6 +66,27 @@ class Game(State):
         
         # Initialize the game state
         self.game_state = GameState(self.branches)
+        
+    def setup_custom_level(self, bird_list):
+        # Create branches with zigzag layout (left to right, top to bottom)
+        margin = 100
+        id = 0
+        x = 0
+        y = 0
+        row = 0
+        left = True
+        for i, branch_data in enumerate(bird_list):
+            y = margin + row * (BRANCH_HEIGHT + 100)
+            if left:
+                x = margin
+            else:
+                x = SCREEN_WIDTH - margin - BRANCH_WIDTH
+                row += 1
+            branch = Branch(x, y, id)
+            for color in branch_data:
+                branch.add_bird(Bird(color))
+            self.branches.append(branch)
+            left = not left
         
     def setup_level(self, num_branches):
         # Create branches with zigzag layout (left to right, top to bottom)

@@ -110,4 +110,5 @@ class GameState:
                 if all(bird.color == branch.birds[0].color for bird in branch.birds):
                     completed_count += 1
         
-        return completed_count == len(COLORS)
+        return completed_count == len(COLORS) # FIXME: These values should not be constants
+    
