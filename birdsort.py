@@ -10,28 +10,27 @@ from models.bird import Bird
 from models.branch import Branch
 from models.button import Button
 
-from constants import (
+""" from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
     BRANCH_WIDTH,
     BRANCH_HEIGHT,
     MAX_BIRDS_PER_BRANCH,
-    COLORS
-)
+    COLORS,
+) """
+import constants
 
 from algorithms.dfs import *
 from states.gameState import GameState
 
 
 class Game(State):
-    def __init__(self, num_branches, bird_list=[], is_custom=False):
+    def __init__(self, num_branches, bird_list=[], num_colors=4, is_custom=False):
         super().__init__()
         self.branches = []
+        constants.num_colors = num_colors
         self.selected_branch = None
-        if (is_custom):
-            self.setup_custom_level(bird_list)
-        else:
-            self.setup_level(num_branches)
+        self.setup_level(num_branches, bird_list, is_custom)
         self.moves = 0
         self.completed_branches = 0
         self.font = pygame.font.SysFont(None, 36)
@@ -44,11 +43,11 @@ class Game(State):
         algorithms = [["bfs",Algorithm.BFS], ["dfs",Algorithm.DFS], ["dls",Algorithm.DLS], ["astar",Algorithm.ASTAR]]
         total_buttons = len(algorithms)  # Number of algorithms
         total_width = total_buttons * button_width
-        spacing = (SCREEN_WIDTH - total_width) // (total_buttons + 1)
+        spacing = (constants.SCREEN_WIDTH - total_width) // (total_buttons + 1)
         
         for i, algorithm in enumerate(algorithms):
             x = spacing + i * (button_width + spacing)
-            y = SCREEN_HEIGHT - button_height - 20
+            y = constants.SCREEN_HEIGHT - button_height - 20
             button = Button(x, y, button_width, button_height, f"Hint ({algorithm[0]})",(200, 200, 255), (150, 150, 255))
             self.hint_buttons.append((button, algorithm))
             
@@ -67,7 +66,7 @@ class Game(State):
         # Initialize the game state
         self.game_state = GameState(self.branches)
         
-    def setup_custom_level(self, bird_list):
+    def setup_level(self, num_branches, bird_list, is_custom):
         # Create branches with zigzag layout (left to right, top to bottom)
         margin = 100
         id = 0
@@ -75,56 +74,40 @@ class Game(State):
         y = 0
         row = 0
         left = True
-        for i, branch_data in enumerate(bird_list):
-            y = margin + row * (BRANCH_HEIGHT + 100)
+        all_birds = []
+        
+        if not is_custom:
+            random_birds=[]
+            # Create exactly MAX_BIRDS_PER_BRANCH birds of each color
+            for color in constants.COLORS:
+                for _ in range(constants.MAX_BIRDS_PER_BRANCH):
+                    random_birds.append(Bird(color))
+            random.shuffle(random_birds) # Shuffle all birds
+            bird_index = 0
+            for i in range(num_branches):  # FIXME: Make this not hardcoded
+                branch = []
+                for j in range(constants.MAX_BIRDS_PER_BRANCH):
+                    if bird_index < len(random_birds):
+                        branch.append(random_birds[bird_index])
+                        bird_index += 1
+                    else:
+                        break
+                all_birds.append(branch)
+        else:
+            all_birds = bird_list
+    
+        for i, branch_data in enumerate(all_birds):
+            y = margin + row * (constants.BRANCH_HEIGHT + 100)
             if left:
                 x = margin
             else:
-                x = SCREEN_WIDTH - margin - BRANCH_WIDTH
+                x = constants.SCREEN_WIDTH - margin - constants.BRANCH_WIDTH
                 row += 1
             branch = Branch(x, y, id)
             for color in branch_data:
-                branch.add_bird(Bird(color))
+                branch.add_bird(color)
             self.branches.append(branch)
             left = not left
-        
-    def setup_level(self, num_branches):
-        # Create branches with zigzag layout (left to right, top to bottom)
-        margin = 100
-        id = 0
-        x = 0
-        y = 0
-        row = 0
-        left = True
-        for i in range(num_branches):
-            y = margin + row * (BRANCH_HEIGHT + 100)
-            if left:
-                x = margin
-            else:
-                x = SCREEN_WIDTH - margin - BRANCH_WIDTH
-                row += 1
-            self.branches.append(Branch(x, y, id))
-            left = not left # Draw next on opposite side
-        
-        # Generate a solvable distribution of birds
-        all_birds = []
-        
-        # Create exactly MAX_BIRDS_PER_BRANCH birds of each color
-        for color in COLORS:
-            for _ in range(MAX_BIRDS_PER_BRANCH):
-                all_birds.append(Bird(color))
-        
-        # Shuffle all birds
-        random.shuffle(all_birds)
-        
-        # Distribute birds across the first 4 branches
-        bird_index = 0
-        for i in range(4):  # Fill the first 4 branches
-            branch = self.branches[i]
-            for j in range(MAX_BIRDS_PER_BRANCH):
-                if bird_index < len(all_birds):
-                    branch.add_bird(all_birds[bird_index])
-                    bird_index += 1
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -247,30 +230,37 @@ class Game(State):
         moves_text = self.font.render(f"Moves: {self.moves}", True, (0, 0, 0))
         surface.blit(moves_text, (20, 20))
         
-        completed_text = self.font.render(f"Completed: {self.completed_branches}/{len(COLORS)}", True, (0, 0, 0))
+        completed_text = self.font.render(f"Completed: {self.completed_branches}/{len(constants.COLORS)}", True, (0, 0, 0))
         surface.blit(completed_text, (20, 60))
         
         # Instructions
         help_text = self.font.render("Click to select a branch, then click another to move birds", True, (0, 0, 0))
-        surface.blit(help_text, (SCREEN_WIDTH//2 - 240, 20))
+        surface.blit(help_text, (constants.SCREEN_WIDTH//2 - 240, 20))
         
         # Check if player won
         if (self.is_game_over() == 1):
             # Draw semi-transparent overlay
-            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 128))
             surface.blit(overlay, (0, 0))
             
             # Draw win message
             win_font = pygame.font.SysFont(None, 72)
             win_text = win_font.render("You Won!", True, (255, 255, 255))
-            win_rect = win_text.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2))
+            win_rect = win_text.get_rect(center=(constants.SCREEN_WIDTH//2, constants.SCREEN_HEIGHT//2))
             surface.blit(win_text, win_rect)
             
             moves_result = self.font.render(f"Total Moves: {self.moves}", True, (255, 255, 255))
-            moves_rect = moves_result.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGHT//2 + 60))
+            moves_rect = moves_result.get_rect(center=(constants.SCREEN_WIDTH//2, constants.SCREEN_HEIGHT//2 + 60))
             surface.blit(moves_result, moves_rect)
     
     def get_game_state(self):
         """Return the current game state."""
         return self.game_state
+    
+    def check_level_possible(self):
+        solver = Solver(Algorithm.ASTAR) 
+        if (solver.find_solution(GameState(self.branches)) != []):
+            return True
+        return False
+    

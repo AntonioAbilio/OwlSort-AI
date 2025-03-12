@@ -1,10 +1,7 @@
-import pygame
-import json
 import ast
 import tkinter as tk
 from tkinter import filedialog
-import ctypes
-from models.branch import Branch
+from collections import Counter
 from models.bird import Bird
 
 # Function to open file dialog and load level
@@ -23,10 +20,12 @@ def load_level():
         try:
             rgb_list = ast.literal_eval(content)
             branches = parse_level(rgb_list)
-            for branch in branches:
-                for bird in branch:
-                    print(bird.color)
-            return rgb_list
+            color_counts = validate_birds(rgb_list)
+            if color_counts is not None:
+                return (color_counts, branches)
+            else:
+                print("Invalid level: Each color must appear exactly 4 times.")
+                return None
         except (SyntaxError, ValueError) as e:
             print(f"Error parsing file: {e}")
             return None
@@ -40,8 +39,19 @@ def parse_level(level_data) :
             branch.append(bird)
         branches.append(branch)
     return branches
+
+def validate_birds(rgb_list):
+    flat_list = [color for row in rgb_list for color in row]  # Flatten the nested list
+    color_counts = Counter(flat_list)
+
+    # Check if all colors have exactly 4 occurrences
+    valid = all(count == 4 for count in color_counts.values())
+    
+    if valid:
+        return len(color_counts)
+    return None
     
 
-def check_level_possible(GameState):
+def check_level_possible(gameState):
     pass
     

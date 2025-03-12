@@ -29,10 +29,16 @@ class ChooseLevel(State) :
 
             # Check if custom button was clicked
             if self.custom_button.is_clicked(mouse_pos):
-                level_data = import_manager.load_level()
-                self.next_state = Game(num_branches=len(level_data), bird_list=level_data, is_custom=True)
-                print("Loaded Level:", level_data)  # Debugging print
-                #TODO: Deal with invalid levels (check if level_data is None)
+                result = import_manager.load_level()
+                if result is None:
+                    return
+                (num_colors, level_data) = result
+                game = Game(num_branches=len(level_data), bird_list=level_data, is_custom=True, num_colors=num_colors)
+                if game.check_level_possible():
+                    print("Loaded Level:", level_data)  # Debugging print
+                    self.next_state = game
+                else:
+                    print("Invalid level!")
                 return
 
             
