@@ -54,7 +54,13 @@ class SolutionCache:
             # Check if user's move matches the first move in the solution
             if solution and len(solution) > 0 and solution[0] == move:
                 # Remove the first move from the solution
-                updated_solution = solution[1:]
+                if hasattr(solution, 'popleft'):  # Check if it's a deque
+                    updated_solution = solution.copy()
+                    updated_solution.popleft()  # Remove first element from deque
+                    print(f"Updated solution: {updated_solution}")
+                else:
+                    # For regular lists
+                    updated_solution = solution[1:]
                 
                 # Store the updated solution for the new state
                 new_state_hash = hash(game_state)
