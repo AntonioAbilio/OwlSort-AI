@@ -22,7 +22,7 @@ class MainMenu(State) :
             
             # Check if start button was clicked
             if self.start_button.is_clicked(mouse_pos):
-                self.next_state = Game()
+                self.next_state = Game(7)
                 print("Start button clicked")
                 return
             

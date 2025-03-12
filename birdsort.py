@@ -1,6 +1,7 @@
 import pygame 
 import sys
 import random
+import math
 from algorithms.algorithm_picker import Algorithm, Solver
 from state_manager import State
 from collections import deque
@@ -23,11 +24,11 @@ from states.gameState import GameState
 
 
 class Game(State):
-    def __init__(self):
+    def __init__(self, num_branches):
         super().__init__()
         self.branches = []
         self.selected_branch = None
-        self.setup_level()
+        self.setup_level(num_branches)
         self.moves = 0
         self.completed_branches = 0
         self.font = pygame.font.SysFont(None, 36)
@@ -63,25 +64,23 @@ class Game(State):
         # Initialize the game state
         self.game_state = GameState(self.branches)
         
-    def setup_level(self):
+    def setup_level(self, num_branches):
         # Create branches with zigzag layout (left to right, top to bottom)
-        branch_count = 6  # 4 for birds + 2 empty for sorting
         margin = 100
-        rows = 3
-        cols = 2
         id = 0
-        
-        for row in range(rows):
-            for col in range(cols):
-                # Alternate between left and right sides
-                if col == 0:  # Left side
-                    x = margin
-                else:  # Right side
-                    x = SCREEN_WIDTH - margin - BRANCH_WIDTH
-                
-                y = margin + row * (BRANCH_HEIGHT + 100)
-                self.branches.append(Branch(x, y, id))
-                id += 1
+        x = 0
+        y = 0
+        row = 0
+        left = True
+        for i in range(num_branches):
+            y = margin + row * (BRANCH_HEIGHT + 100)
+            if left:
+                x = margin
+            else:
+                x = SCREEN_WIDTH - margin - BRANCH_WIDTH
+                row += 1
+            self.branches.append(Branch(x, y, id))
+            left = not left # Draw next on opposite side
         
         # Generate a solvable distribution of birds
         all_birds = []
