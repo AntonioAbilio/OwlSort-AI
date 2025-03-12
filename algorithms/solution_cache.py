@@ -1,5 +1,15 @@
 from states.gameState import GameState
 
+
+#cached_solutions = {
+#    First game state (hash: 12345)
+#    12345: {
+#        Algorithm.BFS: [(0, 2), (1, 3), (0, 1)],  BFS solution path
+#        Algorithm.DFS: [(0, 1), (2, 3), (0, 2)],  DFS solution path
+#        Algorithm.ASTAR: [(0, 2), (1, 0), (3, 1)] A* solution path
+#    },
+#   ...
+#}
 class SolutionCache:
     def __init__(self):
         self.cached_solutions = {}  # Dictionary to store solutions by algorithm
@@ -11,7 +21,12 @@ class SolutionCache:
         
         # Check if we have a cached solution for this state and algorithm
         if state_hash in self.cached_solutions and algorithm in self.cached_solutions[state_hash]:
-            return self.cached_solutions[state_hash][algorithm]
+
+            path = self.cached_solutions[state_hash][algorithm]
+            from_idx, to_idx = path[0]
+            if not(game_state.is_valid_move(from_idx, to_idx)):
+                return None
+            return path
         
         return None
     

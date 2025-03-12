@@ -47,11 +47,10 @@ class GameState:
         
         return GameState(new_branches, self.move_history.copy())
     
-    def apply_move(self, from_idx, to_idx): 
-        '''this will try to move, if it does it updates itself and returns true, if it cant it returns false'''
+    def is_valid_move(self, from_idx, to_idx):
         from_branch = self.branches[from_idx]
         to_branch = self.branches[to_idx]
-        
+
         # Check if we can apply the move
         if not from_branch.birds or from_branch.is_completed: # Source branch is empty or complete
             return False
@@ -62,6 +61,18 @@ class GameState:
         if to_branch.birds:
             if (to_branch.birds[-1].color != top_bird_color): # Top color does not match
                 return False
+        return (from_branch, to_branch)
+    
+    def apply_move(self, from_idx, to_idx): 
+        '''this will try to move, if it does it updates itself and returns true, if it cant it returns false'''
+        
+        branchTuple = self.is_valid_move(from_idx, to_idx)
+
+        if not(isinstance(branchTuple, tuple)):
+            return False
+        
+        from_branch, to_branch = branchTuple
+        top_bird_color = from_branch.birds[-1].color
         
         # Find all birds of the same color in sequence from the top
         birds_to_move = []
