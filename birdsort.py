@@ -42,7 +42,7 @@ class Game(State):
         button_width = 150
         button_height = 50
 
-        algorithms = [["bfs",Algorithm.BFS], ["dfs",Algorithm.DFS], ["dls",Algorithm.DLS], ["astar",Algorithm.ASTAR]]
+        algorithms = [["bfs",Algorithm.BFS], ["dfs-FA",Algorithm.DFS_FIRST_ACCEPT], ["dfs-Best",Algorithm.DFS_BEST], ["dls",Algorithm.DLS], ["astar",Algorithm.ASTAR]]
         total_buttons = len(algorithms)  # Number of algorithms
         total_width = total_buttons * button_width
         spacing = (SCREEN_WIDTH - total_width) // (total_buttons + 1)

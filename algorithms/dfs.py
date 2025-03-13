@@ -5,7 +5,7 @@ from states.gameState import GameState
 from models.bird import Bird
 from models.branch import Branch
 
-def find_solution(self):
+def find_solution(self, first_accept=True):
     """Use DFS to find the shortest solution path."""
 
     start_state = self.clone()
@@ -25,6 +25,9 @@ def find_solution(self):
 
         # Check if this is a winning state
         if current_state.is_solved():
+            if first_accept:
+                best_path = current_path
+                break
             if len(current_path) < best_path_length:
                 print("Found new path, old was", best_path_length, "and new is", len(current_path))
                 best_path = current_path

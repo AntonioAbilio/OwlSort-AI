@@ -4,11 +4,12 @@ from states.gameState import GameState
 from algorithms import bfs, dfs, dls, astar, it_deep
 
 class Algorithm(Enum):
-    BFS     = bfs.find_solution
-    DFS     = dfs.find_solution
-    DLS     = dls.find_solution
-    ASTAR   = astar.find_solution
-    IT_DEEP = it_deep.find_solution
+    BFS              = bfs.find_solution
+    DFS_FIRST_ACCEPT = dfs.find_solution
+    DFS_BEST         = lambda game_state: dfs.find_solution(game_state, first_accept=False)
+    DLS              = dls.find_solution
+    ASTAR            = astar.find_solution
+    IT_DEEP          = it_deep.find_solution
 
 class Solver():
     def __init__(self, algorithm):
