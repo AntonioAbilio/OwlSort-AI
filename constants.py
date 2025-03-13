@@ -19,5 +19,7 @@ import pygame
 clock = pygame.time.Clock()
 delta_time = clock.tick(60) / 1000.0  # Convert milliseconds to seconds
 
+bird_height = 40
+bird_width = 40
 
 # TODO: Rename this file to globals.py

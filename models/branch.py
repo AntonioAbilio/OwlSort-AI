@@ -1,4 +1,5 @@
 import pygame
+import constants
 from constants import (
     SCREEN_WIDTH,
     BRANCH_WIDTH,
@@ -31,14 +32,14 @@ class Branch:
         # Draw birds on branch
         if self.side == "left":
             for i, bird in enumerate(self.birds):
-                bird_x = self.x + 10 + (i * (BIRD_SIZE + 10))
-                bird_y = self.y - BIRD_SIZE
+                bird_x = self.x - 60 + (i * (BIRD_SIZE + 10))
+                bird_y = self.y - constants.bird_height
                 bird.draw(surface, (bird_x, bird_y))
         
         else:
             for i, bird in enumerate(self.birds):
-                bird_x = self.x + BRANCH_WIDTH - (40 + (i * (BIRD_SIZE + 10)))
-                bird_y = self.y - BIRD_SIZE
+                bird_x = self.x + 120 - (40 + (i * (BIRD_SIZE + 10)))
+                bird_y = self.y - constants.bird_height
                 bird.draw(surface, (bird_x, bird_y))
         
     def check_completion(self):
