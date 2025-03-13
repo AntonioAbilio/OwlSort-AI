@@ -14,8 +14,6 @@ def find_solution(game_state):
     
     while queue:
         states_checked += 1
-        if states_checked % 100 == 0:
-            print(f"A* progress: {states_checked} states checked, queue size: {len(queue)}")
         
         #get state with lowest evaluation score
         _, _, current_state, current_path = heapq.heappop(queue)
