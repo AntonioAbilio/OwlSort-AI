@@ -1,12 +1,11 @@
 from algorithms import algo_utils
 from collections import deque
-from states.gameState import GameState
 import time
 
-def find_solution(game_state, max_depth=-1):
+def find_solution(game_state, cancel_event, max_depth=-1):
     """
     Use Breadth-First Search to find a solution path.
-    
+
     Parameters:
     game_state - The initial GameState
     max_depth - Maximum search depth, -1 for unlimited
@@ -30,6 +29,9 @@ def find_solution(game_state, max_depth=-1):
     max_queue_size = 1
     
     while queue:
+        if cancel_event.is_set():
+            return []
+        
         states_checked += 1
         
         max_queue_size = max(max_queue_size, len(queue))

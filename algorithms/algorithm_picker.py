@@ -9,7 +9,7 @@ import time
 class Algorithm(Enum):
     BFS     = bfs.find_solution
     DFS_FIRST_ACCEPT = dfs.find_solution
-    DFS_BEST         = lambda game_state: dfs.find_solution(game_state, first_accept=False)
+    DFS_BEST         = lambda game_state, cancel_event: dfs.find_solution(game_state, cancel_event , first_accept=False)
     DLS     = dls.find_solution
     ASTAR   = astar.find_solution
     WASTAR  = wastar.find_solution
@@ -26,6 +26,7 @@ class Solver:
         self.thread = None
         self.start_time = None
         self.algorithm_name = None
+        self.cancel_event = threading.Event()
         
         # For algorithm that's currently running
         for alg in Algorithm:
@@ -36,7 +37,7 @@ class Solver:
     def _run_algorithm(self, game_state, callback):
         """Internal method to run the algorithm in a thread"""
         try:
-            solution = self.algorithm(game_state)
+            solution = self.algorithm(game_state, self.cancel_event)
             self.solution = solution
             self.is_running = False
             self.start_time = None
@@ -84,15 +85,7 @@ class Solver:
         self.thread.daemon = True  # Make thread exit when main program exits
         self.thread.start()
         return True
-    
-    def is_solution_ready(self):
-        """Check if the solution is ready"""
-        return not self.is_running and self.solution is not None
-    
-    def get_solution(self):
-        """Get the current solution (may be None if not ready)"""
-        return self.solution
-    
+        
     def get_elapsed_time(self):
         """Get the elapsed time since the algorithm started running"""
         if not self.is_running or self.start_time is None:
@@ -100,9 +93,8 @@ class Solver:
         return time.time() - self.start_time
     
     def cancel(self):
-        """
-        Flag to cancel solving (note: this doesn't actually stop the thread,
-        but the algorithm should check for this flag and stop early)
-        """
+        """ Signal the algorithm to stop """
+        print(f"Canceling {self.algorithm_name} algorithm")
+        self.cancel_event.set()
         self.is_running = False
         self.start_time = None

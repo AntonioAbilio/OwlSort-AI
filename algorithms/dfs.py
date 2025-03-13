@@ -2,7 +2,7 @@ import sys
 from collections import deque
 import time
 
-def find_solution(self, first_accept=True):
+def find_solution(self, cancel_event, first_accept=True):
     """Use DFS to find the shortest solution path."""
     start_time = time.time()
 
@@ -19,6 +19,10 @@ def find_solution(self, first_accept=True):
     best_path_length = sys.maxsize
 
     while stack:
+        if cancel_event.is_set():
+            print("Search cancelled!")
+            return []
+        
         current_state, current_path = stack.pop()
 
         # Check if this is a winning state

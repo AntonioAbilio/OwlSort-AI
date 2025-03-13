@@ -3,7 +3,7 @@ from constants import ALGORITHM_TIMEOUT
 import heapq
 import time
 
-def find_solution(game_state, weight=5.5): #TODO: Might need to change weight
+def find_solution(game_state, cancel_event, weight=5.5): #TODO: Might need to change weight
 
 
     start_time = time.time()
@@ -20,6 +20,8 @@ def find_solution(game_state, weight=5.5): #TODO: Might need to change weight
     states_checked = 0
    
     while queue:
+        if cancel_event.is_set():
+            return []
         
         states_checked += 1
        

@@ -1,9 +1,8 @@
 from algorithms import algo_utils
 import heapq
-from constants import ALGORITHM_TIMEOUT
 import time
 
-def find_solution(game_state):
+def find_solution(game_state, cancel_event):
     start_time = time.time()
     
     # In greedy best-first search, we only use the heuristic value
@@ -16,6 +15,8 @@ def find_solution(game_state):
     states_checked = 0
    
     while queue:
+        if cancel_event.is_set():
+            return []
 
         states_checked += 1
        

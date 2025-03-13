@@ -180,8 +180,13 @@ class Game(State):
 
     def get_hint(self, algorithm):
         if self.current_solver and self.current_solver.is_running:
-            print("Already solving, please wait...")
-            return
+            if self.current_solver.algorithm != algorithm[1]:
+                print("Already solving, please wait...")
+                return
+            else:
+                # Cancel the current solver
+                self.current_solver.cancel()
+                return
         
         # Check if we already have a cached solution for this state and algorithm
         self.solution_path = self.solution_cache.get_solution(self.game_state, algorithm[1])
@@ -206,7 +211,8 @@ class Game(State):
         """Callback for when a solution is found"""
         self.solution_path = solution
         # Cache the solution
-        self.solution_cache.store_solution(self.game_state, algorithm, self.solution_path)
+        if solution:
+            self.solution_cache.store_solution(self.game_state, algorithm, self.solution_path)
 
         # Display the hint
         self.setHint(solution)

@@ -21,6 +21,9 @@ class TreeNode:
         return True
     
 def trace_path(node):
+    if node is None:
+        return []
+
     parent = node.parent
     path = []
     while parent is not None:
