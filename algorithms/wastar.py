@@ -1,8 +1,11 @@
 from algorithms import algo_utils
+from constants import ALGORITHM_TIMEOUT
 import heapq
 import time
 
-def find_solution(game_state, weight=5.5):
+def find_solution(game_state, weight=5.5): #TODO: Might need to change weight
+
+
     start_time = time.time()
     
     g_score = 0 #g_score is the cost from start to current node
@@ -17,6 +20,7 @@ def find_solution(game_state, weight=5.5):
     states_checked = 0
    
     while queue:
+        
         states_checked += 1
        
         _, _, current_state, current_path, current_g = heapq.heappop(queue)

@@ -1,12 +1,10 @@
 import sys
-from algorithms import algo_utils
 from collections import deque
-from states.gameState import GameState
-from models.bird import Bird
-from models.branch import Branch
+import time
 
 def find_solution(self, first_accept=True):
     """Use DFS to find the shortest solution path."""
+    start_time = time.time()
 
     start_state = self.clone()
 
@@ -65,6 +63,10 @@ def find_solution(self, first_accept=True):
         print(f"Best solution has {len(best_path)} moves")
     else:
         print("No solution found")
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Time taken: {elapsed_time:.5f} seconds")
     return best_path
 
 

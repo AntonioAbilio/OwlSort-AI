@@ -14,7 +14,6 @@ def find_solution(game_state, max_depth=-1):
     Returns:
     A list of moves [(from_idx, to_idx), ...] representing the solution path
     """
-    import sys
     
     start_time = time.time()
     print(f"\n=== Finding solution with BFS (maxDepth={max_depth}) ===")
@@ -32,8 +31,6 @@ def find_solution(game_state, max_depth=-1):
     
     while queue:
         states_checked += 1
-        if states_checked % 100 == 0:
-            print(f"BFS progress: {states_checked} states checked, queue size: {len(queue)}")
         
         max_queue_size = max(max_queue_size, len(queue))
         current_state, current_path, current_depth = queue.popleft()  # Use popleft() for FIFO behavior
@@ -48,7 +45,7 @@ def find_solution(game_state, max_depth=-1):
             print(f"\nBFS search completed:")
             print(f"States checked: {states_checked}")
             print(f"Max queue size: {max_queue_size}")
-            print(f"Time taken: {elapsed_time:.5f} seconds")
+            print(f"Time taken: {elapsed_time:.2f} seconds")
             
             return current_path
         
@@ -73,7 +70,7 @@ def find_solution(game_state, max_depth=-1):
     print(f"\nBFS search completed:")
     print(f"States checked: {states_checked}")
     print(f"Max queue size: {max_queue_size}")
-    print(f"Time taken: {elapsed_time:.5f} seconds")
+    print(f"Time taken: {elapsed_time:.2f} seconds")
     print(f"No solution found within depth limit {max_depth}")
     
     return []

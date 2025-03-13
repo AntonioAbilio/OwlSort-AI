@@ -1,5 +1,6 @@
 from algorithms import algo_utils
 import heapq
+from constants import ALGORITHM_TIMEOUT
 import time
 
 def find_solution(game_state):
@@ -15,6 +16,7 @@ def find_solution(game_state):
     states_checked = 0
    
     while queue:
+
         states_checked += 1
        
         # Get state with lowest heuristic value

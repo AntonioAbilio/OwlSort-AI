@@ -12,4 +12,6 @@ COLORS = [
 ]
 num_colors = 4
 
+ALGORITHM_TIMEOUT = 60  # seconds
+
 # TODO: Rename this file to globals.py
