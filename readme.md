@@ -5,7 +5,7 @@ A game with ai designed to solve puzzles inspired by the mobile game Bird Sort 2
 
 
 
----
+
 <img src="./assets/titlePrintScreen.png" alt="Cucu fly" width="20000" align="center">
 
 
