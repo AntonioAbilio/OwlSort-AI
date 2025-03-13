@@ -108,6 +108,7 @@ class Game(State):
                 branch.add_bird(color)
             self.branches.append(branch)
             left = not left
+            id += 1
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
