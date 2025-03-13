@@ -1,8 +1,7 @@
 import pygame
 import sys
-from state_manager import State, StateManager
-from mainmenu import MainMenu
-from birdsort import GameState, Game
+from windows.state_manager import StateManager
+from windows.mainmenu import MainMenu
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
@@ -12,6 +11,9 @@ from constants import (
 pygame.init()
 
 # Set up the screen
+#screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.SCALED) # TODO: This might be better for scaling (Test with a non 4k display)
+#ctypes.windll.shcore.SetProcessDpiAwareness(1)  # Enable DPI scaling # TODO: This might be better for scaling (Test with a non 4k display)
+
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Bird Sort 2: Color Puzzle")
 clock = pygame.time.Clock()
