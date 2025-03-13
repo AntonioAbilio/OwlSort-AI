@@ -1,4 +1,4 @@
-# 🐦 **AI Bird Sort Puzzle Solver** <img src="./assets/cucu_fly.gif" alt="Cucu fly" width="160" align="right">
+# 🐦 **OwlSort Puzzle Game** <img src="./assets/cucu_fly.gif" alt="Cucu fly" width="160" align="right">
 
 
 A game with ai designed to solve puzzles inspired by the mobile game Bird Sort 2. This solver employs various search algorithms like BFS, DFS, A*, Greedy, and more.
@@ -9,9 +9,9 @@ A game with ai designed to solve puzzles inspired by the mobile game Bird Sort 2
 <img src="./assets/titlePrintScreen.png" alt="Cucu fly" width="20000" align="center">
 
 
-## 🎮 **About Bird Sort 2**
+## 🎮 **About OwlSor**
 
-Bird Sort 2 is a captivating puzzle game where players sort colored birds perched on tree branches, aiming to group birds of the same color together. Once grouped, these birds can fly away, freeing up branch space for further sorting. The game introduces challenges such as limited branch space and specific sorting rules, making it both engaging and mentally stimulating.
+OwlSor is a captivating puzzle game where players sort colored birds perched on tree branches, aiming to group birds of the same color together. Once grouped, these birds can fly away, freeing up branch space for further sorting. The game introduces challenges such as limited branch space and specific sorting rules, making it both engaging and mentally stimulating.
 
 *For more details, visit the [Bird Sort 2 Color Puzzle Game on the App Store](https://apps.apple.com/us/app/bird-sort-2-color-puzzle-game/id6689494714).*
 
