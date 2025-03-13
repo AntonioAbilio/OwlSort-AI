@@ -3,6 +3,8 @@
 
 A game with ai designed to solve puzzles inspired by the mobile game Bird Sort 2. This solver employs various search algorithms like BFS, DFS, A*, Greedy, and more.
 
+
+
 ---
 <img src="./assets/titlePrintScreen.png" alt="Cucu fly" width="20000" align="center">
 
