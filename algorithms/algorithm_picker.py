@@ -6,7 +6,8 @@ from algorithms import bfs, dfs, dls, astar, it_deep, wastar, greedy
 
 class Algorithm(Enum):
     BFS     = bfs.find_solution
-    DFS     = dfs.find_solution
+    DFS_FIRST_ACCEPT = dfs.find_solution
+    DFS_BEST         = lambda game_state: dfs.find_solution(game_state, first_accept=False)
     DLS     = dls.find_solution
     ASTAR   = astar.find_solution
     WASTAR  = wastar.find_solution
