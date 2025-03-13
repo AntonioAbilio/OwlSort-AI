@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 from collections import Counter
 from models.bird import Bird
+import os
 
 # Function to open file dialog and load level
 def load_level():
@@ -13,6 +14,10 @@ def load_level():
         title="Select Level File",
         filetypes=[("Text Files", "*.txt")]
     )
+    
+    if not os.path.exists(file_path):
+        print("File does not exist.")
+        return None
     
     with open(file_path, 'r') as file:
         content = file.read().strip()  # Read and strip unnecessary whitespaces

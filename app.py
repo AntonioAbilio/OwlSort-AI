@@ -1,8 +1,7 @@
 import pygame
 import sys
-from state_manager import State, StateManager
-from mainmenu import MainMenu
-from birdsort import GameState, Game
+from windows.state_manager import StateManager
+from windows.mainmenu import MainMenu
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT,

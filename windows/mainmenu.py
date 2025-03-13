@@ -1,7 +1,8 @@
 import pygame
+import sys
 from levels import import_manager
-from state_manager import State
-from choose_level import ChooseLevel
+from windows.state_manager import State
+from windows.choose_level import ChooseLevel
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT
@@ -28,10 +29,10 @@ class MainMenu(State) :
             
             # Check if quit button was clicked
             if self.quit_button.is_clicked(mouse_pos):
-                import_manager.load_level() # TODO: This shouldn't be here (temporary)
+                pygame.quit()
+                sys.exit()
                 return
 
-            
     def draw(self, surface):
         # Clear screen
         surface.fill((135, 206, 235))  # Sky blue background        

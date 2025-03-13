@@ -3,21 +3,13 @@ import sys
 import random
 import math
 from algorithms.algorithm_picker import Algorithm, Solver
-from state_manager import State
+from windows.state_manager import State
 from collections import deque
 
 from models.bird import Bird
 from models.branch import Branch
 from models.button import Button
 
-""" from constants import (
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT,
-    BRANCH_WIDTH,
-    BRANCH_HEIGHT,
-    MAX_BIRDS_PER_BRANCH,
-    COLORS,
-) """
 import constants
 
 from algorithms.dfs import *
