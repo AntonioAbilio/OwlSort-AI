@@ -1,3 +1,4 @@
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 BRANCH_WIDTH = 200
@@ -13,5 +14,10 @@ COLORS = [
 num_colors = 4
 
 ALGORITHM_TIMEOUT = 60  # seconds
+
+import pygame
+clock = pygame.time.Clock()
+delta_time = clock.tick(60) / 1000.0  # Convert milliseconds to seconds
+
 
 # TODO: Rename this file to globals.py
