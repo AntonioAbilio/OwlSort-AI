@@ -273,6 +273,11 @@ class Game(State):
                 
                 # Draw elapsed time
                 elapsed = self.current_solver.get_elapsed_time()
+
+                if elapsed > constants.ALGORITHM_TIMEOUT: #TODO: maybe dont do this here?
+                    self.current_solver.cancel()
+                    print(f"Algorithm {algorithm_info[0]} took too long and was cancelled")
+
                 time_text = self.font.render(f"{elapsed:.1f}s", True, (0, 0, 0))
                 time_rect = time_text.get_rect(center=(button.x + button.width//2, 
                                                         button.y - 10))
