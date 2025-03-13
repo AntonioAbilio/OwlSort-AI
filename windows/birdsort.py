@@ -49,14 +49,6 @@ class Game(State):
             button = Button(x, y, button_width, button_height, f"Hint ({algorithm[0]})",(200, 200, 255), (150, 150, 255))
             self.hint_buttons.append((button, algorithm))
             
-            """
-            # Create hint button
-            self.hint_button = Button(SCREEN_WIDTH - 200, 20, 180, 50, "Get Hint", 
-                                    (200, 200, 255), (150, 150, 255))
-            self.hint_from = None
-            self.hint_to = None
-            self.solution_path = None
-        """
         self.hint_from = None
         self.hint_to = None
         self.solution_path = None
