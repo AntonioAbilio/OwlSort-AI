@@ -1,24 +1,36 @@
 from algorithms import algo_utils, tree_node
 from states.gameState import GameState
+import time
 
 #################################################################
 #                      Depth limited Search                     #
 #################################################################
 # https://www.geeksforgeeks.org/depth-limited-search-for-ai/    #
 #################################################################
-def find_solution(self, maxDepth=16): # TODO: Might need to change maxDepth
-	goal = depth_limited_search(tree_node.TreeNode(GameState(self.branches)), 0, 0, [], maxDepth)
-	path = tree_node.trace_path(goal)
-	path = [(p[0], p[1]) for p in path[1:]]
-	if goal == None:
-	 	print("No solution found!")
-	else:
-	    tree_node.trace_path(goal)
-	return path  
+def find_solution(self, cancel_event, maxDepth=16): # TODO: Might need to change maxDepth
+    start_time = time.time()
 
-def depth_limited_search(initial_node, goal_state_func, operators_func, visited, depth_limit):
+    goal = depth_limited_search(tree_node.TreeNode(GameState(self.branches)), 0, 0, [], maxDepth, start_time, cancel_event)
+    path = tree_node.trace_path(goal)
+    path = [(p[0], p[1]) for p in path[1:]]
+    if goal == None:
+        print("No solution found!")
+    else:
+        tree_node.trace_path(goal)
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Time taken: {elapsed_time:.5f} seconds")
+    return path  
+
+def depth_limited_search(initial_node, goal_state_func, operators_func, visited, depth_limit, start_time, cancel_event):
+    
+    if cancel_event.is_set():
+        return None
+        
     if initial_node in visited:  
         return None  # Avoid cycles
+
     
     visited.append(initial_node)  # Mark state as visited 
     
@@ -34,7 +46,7 @@ def depth_limited_search(initial_node, goal_state_func, operators_func, visited,
             child.set_parent(initial_node)
             initial_node.add_child(child)
                     
-            result = depth_limited_search(child, goal_state_func, operators_func, visited, depth_limit-1)
+            result = depth_limited_search(child, goal_state_func, operators_func, visited, depth_limit-1, start_time, cancel_event)  
             if result:  # If a solution was found, return it immediately
                 return result  
     return None

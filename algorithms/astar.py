@@ -2,7 +2,7 @@ from algorithms import algo_utils
 import heapq
 import time
 
-def find_solution(game_state):
+def find_solution(game_state, cancel_event):
     start_time = time.time()
 
     queue = [(algo_utils.evaluate_state(game_state), id(game_state), game_state, [])]
@@ -13,11 +13,13 @@ def find_solution(game_state):
     states_checked = 0
     
     while queue:
+        if cancel_event.is_set():
+            return []
         states_checked += 1
         
         #get state with lowest evaluation score
         _, _, current_state, current_path = heapq.heappop(queue)
-        
+
         if current_state.is_solved():
             end_time = time.time()
             elapsed_time = end_time - start_time
