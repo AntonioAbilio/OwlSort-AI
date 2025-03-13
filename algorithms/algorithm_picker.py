@@ -1,13 +1,15 @@
 from enum import Enum
 
 from states.gameState import GameState
-from algorithms import bfs, dfs, dls, astar, it_deep, greedy
+from algorithms import bfs, dfs, dls, astar, it_deep, wastar, greedy
+
 
 class Algorithm(Enum):
     BFS     = bfs.find_solution
     DFS     = dfs.find_solution
     DLS     = dls.find_solution
     ASTAR   = astar.find_solution
+    WASTAR  = wastar.find_solution
     IT_DEEP = it_deep.find_solution
     GREEDY  = greedy.find_solution
 
