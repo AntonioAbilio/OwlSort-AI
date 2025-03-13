@@ -1,8 +1,11 @@
-# 🐦 **AI Bird Sort Puzzle Solver**
+# 🐦 **AI Bird Sort Puzzle Solver** <img src="./assets/cucu_fly.gif" alt="Cucu fly" width="160" align="right">
+
 
 An AI-driven application designed to solve puzzles inspired by the mobile game Bird Sort 2. This solver employs various search algorithms like BFS, DFS, A*, Greedy, and more, running them in background threads with support for cancellation and real-time monitoring.
 
 ---
+<img src="./assets/titlePrintScreen.png" alt="Cucu fly" width="20000" align="center">
+
 
 ## 🎮 **About Bird Sort 2**
 
