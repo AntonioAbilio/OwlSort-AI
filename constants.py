@@ -10,3 +10,6 @@ COLORS = [
     (0, 255, 0),    # Green
     (255, 255, 0),  # Yellow
 ]
+num_colors = 4
+
+# TODO: Rename this file to globals.py

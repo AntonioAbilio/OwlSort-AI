@@ -1,15 +1,18 @@
 from enum import Enum
 
 from states.gameState import GameState
-from algorithms import bfs, dfs, dls, astar, it_deep
+from algorithms import bfs, dfs, dls, astar, it_deep, wastar, greedy
+
 
 class Algorithm(Enum):
-    BFS              = bfs.find_solution
+    BFS     = bfs.find_solution
     DFS_FIRST_ACCEPT = dfs.find_solution
     DFS_BEST         = lambda game_state: dfs.find_solution(game_state, first_accept=False)
-    DLS              = dls.find_solution
-    ASTAR            = astar.find_solution
-    IT_DEEP          = it_deep.find_solution
+    DLS     = dls.find_solution
+    ASTAR   = astar.find_solution
+    WASTAR  = wastar.find_solution
+    IT_DEEP = it_deep.find_solution
+    GREEDY  = greedy.find_solution
 
 class Solver():
     def __init__(self, algorithm):

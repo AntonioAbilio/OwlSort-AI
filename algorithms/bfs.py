@@ -48,7 +48,7 @@ def find_solution(game_state, max_depth=-1):
             print(f"\nBFS search completed:")
             print(f"States checked: {states_checked}")
             print(f"Max queue size: {max_queue_size}")
-            print(f"Time taken: {elapsed_time:.2f} seconds")
+            print(f"Time taken: {elapsed_time:.5f} seconds")
             
             return current_path
         
@@ -73,7 +73,7 @@ def find_solution(game_state, max_depth=-1):
     print(f"\nBFS search completed:")
     print(f"States checked: {states_checked}")
     print(f"Max queue size: {max_queue_size}")
-    print(f"Time taken: {elapsed_time:.2f} seconds")
+    print(f"Time taken: {elapsed_time:.5f} seconds")
     print(f"No solution found within depth limit {max_depth}")
     
     return []

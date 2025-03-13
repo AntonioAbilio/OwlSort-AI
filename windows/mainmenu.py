@@ -1,6 +1,8 @@
 import pygame
-from state_manager import State
-from birdsort import Game
+import sys
+from levels import import_manager
+from windows.state_manager import State
+from windows.choose_level import ChooseLevel
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT
@@ -22,16 +24,15 @@ class MainMenu(State) :
             
             # Check if start button was clicked
             if self.start_button.is_clicked(mouse_pos):
-                self.next_state = Game()
-                print("Start button clicked")
+                self.next_state = ChooseLevel()
                 return
             
             # Check if quit button was clicked
             if self.quit_button.is_clicked(mouse_pos):
-                print("Quit button clicked")
+                pygame.quit()
+                sys.exit()
                 return
 
-            
     def draw(self, surface):
         # Clear screen
         surface.fill((135, 206, 235))  # Sky blue background        

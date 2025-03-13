@@ -1,5 +1,6 @@
 from models.branch import Branch
 from models.bird import Bird
+import constants
 
 class GameState:
     def __init__(self, branches, move_history=None):
@@ -112,13 +113,9 @@ class GameState:
         return len(self.move_history)
 
     def is_solved(self):
-        from constants import COLORS
-        from constants import MAX_BIRDS_PER_BRANCH
-
         completed_count = 0
         for branch in self.branches:
-            if len(branch.birds) == MAX_BIRDS_PER_BRANCH:
+            if len(branch.birds) == constants.MAX_BIRDS_PER_BRANCH:
                 if all(bird.color == branch.birds[0].color for bird in branch.birds):
                     completed_count += 1
-        
-        return completed_count == len(COLORS)
+        return completed_count == constants.num_colors
