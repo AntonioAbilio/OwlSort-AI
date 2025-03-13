@@ -22,7 +22,7 @@ Bird Sort 2 is a captivating puzzle game where players sort colored birds perche
 - Greedy Search  
 - Weighted A*  
 
-✅ Beutiful Sprites and animations hand made for the game  
+✅ Beautiful Sprites and animations hand made for the game  
 ✅ Multithreading for non-blocking execution  
 ✅ Clean cancellation with graceful exit  
 ✅ Tracks execution time and algorithm performance  
