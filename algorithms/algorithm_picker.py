@@ -1,7 +1,7 @@
 from enum import Enum
 
 from states.gameState import GameState
-from algorithms import bfs, dfs, dls, astar, it_deep, wastar, greedy
+from algorithms import bfs, dfs, dls, astar, it_deep, wastar, greedy, uniform
 import threading
 import time
 
@@ -15,6 +15,7 @@ class Algorithm(Enum):
     WASTAR  = wastar.find_solution
     IT_DEEP = it_deep.find_solution
     GREEDY  = greedy.find_solution
+    UNIFORM = uniform.find_solution
 
 
 
