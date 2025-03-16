@@ -3,9 +3,10 @@ from models.bird import Bird
 import constants
 
 class GameState:
-    def __init__(self, branches, move_history=None):
+    def __init__(self, branches, move_history=None, isMock=False):
         self.branch_cap = 4
         self.branches = branches
+        self.isMock = isMock
         self.move_history = move_history if move_history is not None else []
         assert isinstance(self.branches, list)
         assert isinstance(self.move_history, list)
@@ -41,12 +42,12 @@ class GameState:
             
             # Clone birds
             for bird in branch.birds:
-                new_bird = Bird(bird.color)
+                new_bird = Bird(bird.color, self.isMock)
                 new_branch.birds.append(new_bird)
             
             new_branches.append(new_branch)
         
-        return GameState(new_branches, self.move_history.copy())
+        return GameState(new_branches, self.move_history.copy(), isMock=self.isMock)
     
     def is_valid_move(self, from_idx, to_idx):
         from_branch = self.branches[from_idx]

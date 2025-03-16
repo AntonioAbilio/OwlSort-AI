@@ -10,7 +10,7 @@ start_time = time.time()
 def find_solution(self, cancel_event, maxDepth=16): # TODO: Might need to change maxDepth
 	start_time = time.time()
      
-	goal = iterative_deepening_search(tree_node.TreeNode(GameState(self.branches)), 0, 0, maxDepth, start_time, cancel_event)
+	goal = iterative_deepening_search(tree_node.TreeNode(GameState(self.branches, isMock=True)), 0, 0, maxDepth, start_time, cancel_event)
 	path = tree_node.trace_path(goal)
 	path = [(p[0], p[1]) for p in path[1:]]
 	if goal == None:

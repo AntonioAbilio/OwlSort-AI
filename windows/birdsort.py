@@ -196,7 +196,7 @@ class Game(State):
             self.current_solver = Solver(algorithm[1])
             self.current_solver.algorithm_name = algorithm[0]
 
-            self.current_solver.find_solution(GameState(self.branches), self.solution_callback)
+            self.current_solver.find_solution(GameState(self.branches, isMock=True), self.solution_callback)
             
 
         else:
