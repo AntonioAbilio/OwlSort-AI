@@ -36,7 +36,6 @@ class Branch:
         else:
             surface.blit(pygame.transform.flip(self.branch_sprite, True, False), (self.x, self.y))
 
-        
         # Draw birds on branch
         if self.side == "left":
             for i, bird in enumerate(self.birds):

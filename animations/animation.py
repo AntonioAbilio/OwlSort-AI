@@ -46,5 +46,8 @@ class Animation:
             surface.blit(pygame.transform.flip(self.spritesheet, True, False), pos, self.source_rects[self.frame])
         else:
             surface.blit(self.spritesheet, pos, self.source_rects[self.frame])
+            
+    def is_finished(self):
+        return (self.frame == self.num_frames - 1) and (self.frame_time_left <= 0.1) # FIXME: This should not be hardcoded
     
     

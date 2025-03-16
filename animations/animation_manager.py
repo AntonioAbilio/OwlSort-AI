@@ -6,6 +6,9 @@ class AnimationManager:
     def addAnimation(self, key, animation):
         self.anims[key] = animation
         self.lastKey = key
+        
+    def __getitem__(self, index):
+        return self.anims[index]
 
     def update(self, key):
         if key in self.anims:

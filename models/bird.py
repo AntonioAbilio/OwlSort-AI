@@ -11,21 +11,33 @@ class Bird:
         # Create a simple bird representation (circle for now)
         self.surface = pygame.Surface((BIRD_SIZE, BIRD_SIZE), pygame.SRCALPHA)
         self.anims = AnimationManager()
+        self.current_animation = None
+        self.animation_finished = True
         
         if not isMock:
-            print("Loading bird spritesheet")
             bird_spritesheet = pygame.image.load("assets/cucu_fly_spritesheet.png")
             idle_jump_spritesheet = self.tint_sprite(pygame.image.load("assets/idle_jump_spritesheet.png"), color)
+            idle_spritesheet = self.tint_sprite(pygame.image.load("assets/static_cucu.png"), color)
             self.sprite_sheet = self.tint_sprite(bird_spritesheet, color)
             constants.bird_height = bird_spritesheet.get_height()
             constants.bird_width = bird_spritesheet.get_width() // 14 # FIXME: Should not be hardcoded
-            self.anims.addAnimation(0, Animation(spritesheet=self.sprite_sheet, frames_x=14, frames_y=1, frame_duration=0.1, row=1)) # Fly animation
-            self.anims.addAnimation(1, Animation(spritesheet=idle_jump_spritesheet, frames_x=7, frames_y=1, frame_duration=0.1, row=1)) # Fly animation
+            self.anims.addAnimation(0, Animation(spritesheet=idle_spritesheet, frames_x=1, frames_y=1, frame_duration=5, row=1)) # Idle animation
+            self.anims.addAnimation(1, Animation(spritesheet=idle_jump_spritesheet, frames_x=7, frames_y=1, frame_duration=0.1, row=1)) # Idle Jump animation
+            self.anims.addAnimation(2, Animation(spritesheet=self.sprite_sheet, frames_x=14, frames_y=1, frame_duration=0.1, row=1)) # Fly animation
 
     def draw(self, surface, pos, flip=False):
         surface.blit(self.surface, pos)
+        
+        if self.animation_finished:
+            self.current_animation = np.random.choice([0, 1], p=[0.9, 0.1])
+            self.anims[self.current_animation].reset()
+            self.animation_finished = False
+        
+        if self.anims[self.current_animation].is_finished():
+            self.animation_finished = True
+        
+        self.anims.update(self.current_animation)
         self.anims.draw(surface, pos, flip)
-        self.anims.update(1)
         
     def __eq__(self, other):
         if not isinstance(other, Bird):
