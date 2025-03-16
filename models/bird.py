@@ -10,7 +10,6 @@ class Bird:
         self.color = color
         # Create a simple bird representation (circle for now)
         self.surface = pygame.Surface((BIRD_SIZE, BIRD_SIZE), pygame.SRCALPHA)
-        pygame.draw.circle(self.surface, color, (BIRD_SIZE//2, BIRD_SIZE//2), BIRD_SIZE//2) # TODO: Remove
         self.anims = AnimationManager()
         
         if not isMock:
@@ -23,9 +22,9 @@ class Bird:
             self.anims.addAnimation(0, Animation(spritesheet=self.sprite_sheet, frames_x=14, frames_y=1, frame_duration=0.1, row=1)) # Fly animation
             self.anims.addAnimation(1, Animation(spritesheet=idle_jump_spritesheet, frames_x=7, frames_y=1, frame_duration=0.1, row=1)) # Fly animation
 
-    def draw(self, surface, pos):
+    def draw(self, surface, pos, flip=False):
         surface.blit(self.surface, pos)
-        self.anims.draw(surface, pos)
+        self.anims.draw(surface, pos, flip)
         self.anims.update(1)
         
     def __eq__(self, other):

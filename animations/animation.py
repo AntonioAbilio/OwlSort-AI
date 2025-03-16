@@ -39,9 +39,12 @@ class Animation:
     def get_current_frame(self):
         return self.frames[self.current_frame]
     
-    def draw(self, surface, pos):
+    def draw(self, surface, pos, flip=False):
         if (not self.active):
             return
-        surface.blit(self.spritesheet, pos, self.source_rects[self.frame])
+        if flip:
+            surface.blit(pygame.transform.flip(self.spritesheet, True, False), pos, self.source_rects[self.frame])
+        else:
+            surface.blit(self.spritesheet, pos, self.source_rects[self.frame])
     
     

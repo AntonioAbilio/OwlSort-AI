@@ -36,7 +36,7 @@ class GameState:
         new_branches = []
 
         for branch in self.branches:
-            new_branch = Branch(branch.x, branch.y, branch.id)
+            new_branch = Branch(branch.x, branch.y, branch.id, isMock=self.isMock)
             new_branch.side = branch.side
             new_branch.is_completed = branch.is_completed
             

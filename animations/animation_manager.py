@@ -16,5 +16,5 @@ class AnimationManager:
             self.anims[self.lastKey].stop()
             self.anims[self.lastKey].reset()
 
-    def draw(self, surface, position):
-        self.anims[self.lastKey].draw(surface, position)
+    def draw(self, surface, position, flip=False):
+        self.anims[self.lastKey].draw(surface, position, flip)

@@ -9,13 +9,17 @@ from constants import (
 )
 
 class Branch:
-    def __init__(self, x, y, id):
+    def __init__(self, x, y, id, isMock=False):
         if x < (SCREEN_WIDTH/2): self.side = "left"
         else: self.side = "right"
         self.x = x
         self.y = y
         self.birds = []
         self.rect = pygame.Rect(x, y, BRANCH_WIDTH, BRANCH_HEIGHT)
+        
+        if not isMock:
+            self.branch_sprite = pygame.image.load("assets/branch.png")   
+        
         self.is_completed = False
         self.id = id
     
@@ -27,19 +31,23 @@ class Branch:
     
     def draw(self, surface):
         # Draw branch
-        pygame.draw.rect(surface, (139, 69, 19), self.rect)  # Brown color for branch
+        if (self.side == "left"):
+            surface.blit(self.branch_sprite, (self.x, self.y))
+        else:
+            surface.blit(pygame.transform.flip(self.branch_sprite, True, False), (self.x, self.y))
+
         
         # Draw birds on branch
         if self.side == "left":
             for i, bird in enumerate(self.birds):
-                bird_x = self.x - 60 + (i * (BIRD_SIZE + 10))
-                bird_y = self.y - constants.bird_height
-                bird.draw(surface, (bird_x, bird_y))
-        
+                bird_x = self.x + (i * (BIRD_SIZE + 10))
+                bird_y = self.y - constants.bird_height - 5
+                bird.draw(surface, (bird_x, bird_y), flip=True)
+    
         else:
             for i, bird in enumerate(self.birds):
-                bird_x = self.x + 120 - (40 + (i * (BIRD_SIZE + 10)))
-                bird_y = self.y - constants.bird_height
+                bird_x = SCREEN_WIDTH - 120 - (40 + (i * (BIRD_SIZE + 10)))
+                bird_y = self.y - constants.bird_height - 5
                 bird.draw(surface, (bird_x, bird_y))
         
     def check_completion(self):
