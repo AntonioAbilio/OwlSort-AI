@@ -52,13 +52,15 @@ class ChooseLevel(State) :
             
     def draw(self, surface):
         # Clear screen
-        surface.fill((135, 206, 235))  # Sky blue background        
+        surface.fill((135, 206, 235))  # Sky blue background      
+        offset =35 # TODO: Remove (TEMP)     
+  
         self.go_back_button.draw(surface)
         self.levelList_button.draw(surface)
         self.custom_button.draw(surface)
         surface.blit(self.text_surface, (SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
         surface.blit(self.upper_left_branch, (0, 384)) # FIXME: Change to normal branch instead of image
         surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (SCREEN_WIDTH - 472, 384)) # FIXME: Change to normal branch instead of image
-        surface.blit(self.cucu, (SCREEN_WIDTH - 401, 288)) # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.cucu, True, False), (328, 288)) # FIXME: Change to normal branch instead of image
+        surface.blit(self.cucu, (SCREEN_WIDTH - 430, 288-offset)) # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.cucu, True, False), (280, 288-offset)) # FIXME: Change to normal branch instead of image
         

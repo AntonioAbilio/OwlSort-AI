@@ -35,7 +35,8 @@ class MainMenu(State) :
 
     def draw(self, surface):
         # Clear screen
-        surface.fill((135, 206, 235))  # Sky blue background        
+        surface.fill((135, 206, 235))  # Sky blue background   
+        offset =35 # TODO: Remove (TEMP)     
         self.start_button.draw(surface)
         self.quit_button.draw(surface)
         surface.blit(self.title, (SCREEN_WIDTH/2 - 920/2, 76))
@@ -43,8 +44,8 @@ class MainMenu(State) :
         surface.blit(self.upper_left_branch, (0, 572)) # FIXME: Change to normal branch instead of image
         surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (SCREEN_WIDTH - 472, 384)) # FIXME: Change to normal branch instead of image
         surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (SCREEN_WIDTH - 472, 572)) # FIXME: Change to normal branch instead of image
-        surface.blit(self.cucu, (SCREEN_WIDTH - 401, 288)) # FIXME: Change to normal branch instead of image
-        surface.blit(self.cucu, (SCREEN_WIDTH - 401, 476)) # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.cucu, True, False), (328, 288)) # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.cucu, True, False), (328, 476)) # FIXME: Change to normal branch instead of image        
+        surface.blit(self.cucu, (SCREEN_WIDTH - 430, 288-offset)) # FIXME: Change to normal branch instead of image
+        surface.blit(self.cucu, (SCREEN_WIDTH - 430, 476-offset)) # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.cucu, True, False), (280, 288-offset)) # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.cucu, True, False), (280, 476-offset)) # FIXME: Change to normal branch instead of image        
         
