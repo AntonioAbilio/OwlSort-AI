@@ -38,7 +38,8 @@ class Solver:
     def _run_algorithm(self, game_state, callback):
         """Internal method to run the algorithm in a thread"""
         try:
-            solution = self.algorithm(game_state, self.cancel_event)
+            a = game_state.clone()
+            solution = self.algorithm(a, self.cancel_event)
             self.solution = solution
             self.is_running = False
             self.start_time = None

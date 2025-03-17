@@ -45,7 +45,7 @@ class Branch:
     
         else:
             for i, bird in enumerate(self.birds):
-                bird_x = SCREEN_WIDTH - 120 - (40 + (i * (BIRD_SIZE + 10)))
+                bird_x = constants.SCREEN_WIDTH - 120 - (40 + (i * (BIRD_SIZE + 10)))
                 bird_y = self.y - constants.bird_height - 5
                 bird.draw(surface, (bird_x, bird_y))
         

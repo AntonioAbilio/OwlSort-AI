@@ -7,13 +7,7 @@ import os
 
 # Function to open file dialog and load level
 def load_level():
-    root = tk.Tk()
-    root.withdraw()  # Hide the root window
-
-    file_path = filedialog.askopenfilename(
-        title="Select Level File",
-        filetypes=[("Text Files", "*.txt")]
-    )
+    file_path = "/Users/antonioabilio/Downloads/cucu.txt"
     
     if not os.path.exists(file_path):
         print("File does not exist.")

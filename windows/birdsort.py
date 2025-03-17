@@ -68,7 +68,7 @@ class Game(State):
     def setup_level(self, num_branches, bird_list, is_custom):
         # Create branches with zigzag layout (left to right, top to bottom)
         margin = 0
-        upper_offset = 150
+        upper_offset = 200
         id = 0
         x = 0
         y = 0

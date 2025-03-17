@@ -3,10 +3,7 @@ import sys
 from levels import import_manager
 from windows.state_manager import State
 from windows.birdsort import Game
-from constants import (
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT
-)
+import constants
 from models.button import Button
 
 class ChooseLevel(State) :
@@ -14,13 +11,13 @@ class ChooseLevel(State) :
         super().__init__()
         self.font = pygame.font.Font(None, 70)
         self.background = pygame.image.load("assets/forest_bg.png")
-        self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.background = pygame.transform.scale(self.background, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.text_surface = self.font.render("Choose Level", True, (255, 255, 255))
         self.upper_left_branch = pygame.image.load("assets/branch.png")
         self.cucu = pygame.image.load("assets/static_cucu.png")
-        self.go_back_button = Button(SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", (200, 200, 255), (150, 150, 255))
-        self.levelList_button = Button(SCREEN_WIDTH/4 - 270, SCREEN_HEIGHT/2 - 50, 250, 50, "Level List", (200, 200, 255), (150, 150, 255))
-        self.custom_button = Button(SCREEN_WIDTH/2 + SCREEN_WIDTH/4 + 20, SCREEN_HEIGHT/2 - 50, 250, 50, "Custom (Load from file)", (200, 200, 255), (150, 150, 255))
+        self.go_back_button = Button(constants.SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", (200, 200, 255), (150, 150, 255))
+        self.levelList_button = Button(constants.SCREEN_WIDTH/4 - 270, constants.SCREEN_HEIGHT/2 - 50, 250, 50, "Level List", (200, 200, 255), (150, 150, 255))
+        self.custom_button = Button(constants.SCREEN_WIDTH/2 + constants.SCREEN_WIDTH/4 + 20, constants.SCREEN_HEIGHT/2 - 50, 250, 50, "Custom (Load from file)", (200, 200, 255), (150, 150, 255))
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -61,9 +58,9 @@ class ChooseLevel(State) :
         self.go_back_button.draw(surface)
         self.levelList_button.draw(surface)
         self.custom_button.draw(surface)
-        surface.blit(self.text_surface, (SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
+        surface.blit(self.text_surface, (constants.SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
         surface.blit(self.upper_left_branch, (0, 384)) # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (SCREEN_WIDTH - 472, 384)) # FIXME: Change to normal branch instead of image
-        surface.blit(self.cucu, (SCREEN_WIDTH - 430, 288-offset)) # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (constants.SCREEN_WIDTH - 472, 384)) # FIXME: Change to normal branch instead of image
+        surface.blit(self.cucu, (constants.SCREEN_WIDTH - 430, 288-offset)) # FIXME: Change to normal branch instead of image
         surface.blit(pygame.transform.flip(self.cucu, True, False), (280, 288-offset)) # FIXME: Change to normal branch instead of image
         

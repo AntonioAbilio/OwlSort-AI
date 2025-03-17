@@ -3,10 +3,7 @@ import sys
 from levels import import_manager
 from windows.state_manager import State
 from windows.choose_level import ChooseLevel
-from constants import (
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT
-)
+import constants
 from models.button import Button
 
 class MainMenu(State) :
@@ -14,11 +11,11 @@ class MainMenu(State) :
         super().__init__()
         self.title = pygame.image.load("assets/title.png")
         self.background = pygame.image.load("assets/forest_bg.png")
-        self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.background = pygame.transform.scale(self.background, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.upper_left_branch = pygame.image.load("assets/branch.png")
         self.cucu = pygame.image.load("assets/static_cucu.png")
-        self.start_button = Button(SCREEN_WIDTH/4 - 200, SCREEN_HEIGHT/2 - 50, 180, 50, "Start", (200, 200, 255), (150, 150, 255))
-        self.quit_button = Button(SCREEN_WIDTH/4 - 200, SCREEN_HEIGHT/2 - 50 + 188, 180, 50, "Quit", (200, 200, 255), (150, 150, 255))
+        self.start_button = Button(constants.SCREEN_WIDTH/4 - 200, constants.SCREEN_HEIGHT/2 - 50, 180, 50, "Start", (200, 200, 255), (150, 150, 255))
+        self.quit_button = Button(constants.SCREEN_WIDTH/4 - 200, constants.SCREEN_HEIGHT/2 - 50 + 188, 180, 50, "Quit", (200, 200, 255), (150, 150, 255))
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -42,13 +39,13 @@ class MainMenu(State) :
         surface.blit(self.background, (0, 0))
         self.start_button.draw(surface)
         self.quit_button.draw(surface)
-        surface.blit(self.title, (SCREEN_WIDTH/2 - 920/2, 76))
+        surface.blit(self.title, (constants.SCREEN_WIDTH/2 - 920/2, 76))
         surface.blit(self.upper_left_branch, (0, 384)) # FIXME: Change to normal branch instead of image
         surface.blit(self.upper_left_branch, (0, 572)) # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (SCREEN_WIDTH - 472, 384)) # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (SCREEN_WIDTH - 472, 572)) # FIXME: Change to normal branch instead of image
-        surface.blit(self.cucu, (SCREEN_WIDTH - 430, 288-offset)) # FIXME: Change to normal branch instead of image
-        surface.blit(self.cucu, (SCREEN_WIDTH - 430, 476-offset)) # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (constants.SCREEN_WIDTH - 472, 384)) # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (constants.SCREEN_WIDTH - 472, 572)) # FIXME: Change to normal branch instead of image
+        surface.blit(self.cucu, (constants.SCREEN_WIDTH - 430, 288-offset)) # FIXME: Change to normal branch instead of image
+        surface.blit(self.cucu, (constants.SCREEN_WIDTH - 430, 476-offset)) # FIXME: Change to normal branch instead of image
         surface.blit(pygame.transform.flip(self.cucu, True, False), (280, 288-offset)) # FIXME: Change to normal branch instead of image
         surface.blit(pygame.transform.flip(self.cucu, True, False), (280, 476-offset)) # FIXME: Change to normal branch instead of image        
         
