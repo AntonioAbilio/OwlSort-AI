@@ -23,7 +23,10 @@ class SolutionCache:
         if state_hash in self.cached_solutions and algorithm in self.cached_solutions[state_hash]:
 
             path = self.cached_solutions[state_hash][algorithm]
-            from_idx, to_idx = path[0]
+            try:
+                from_idx, to_idx = path[0]
+            except:
+                return None
             if not(game_state.is_valid_move(from_idx, to_idx)):
                 return None
             return path
