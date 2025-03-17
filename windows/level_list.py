@@ -26,6 +26,8 @@ class LevelList(State) :
         super().__init__()
         self.font = pygame.font.Font(None, 70)
         self.text_surface = self.font.render("Choose Level", True, (255, 255, 255))
+        self.background = pygame.image.load("assets/forest_bg.png")
+        self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         offset = 100
         offset_up = 100
         col1 = SCREEN_WIDTH/2 - 250 - 180
@@ -104,7 +106,8 @@ class LevelList(State) :
             
     def draw(self, surface):
         # Clear screen
-        surface.fill((135, 206, 235))  # Sky blue background        
+        #surface.fill((135, 206, 235))  # Sky blue background        
+        surface.blit(self.background, (0, 0))
         self.go_back_button.draw(surface)
         self.level1_button.draw(surface)
         self.level2_button.draw(surface)

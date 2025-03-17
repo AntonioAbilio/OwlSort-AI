@@ -13,6 +13,8 @@ class MainMenu(State) :
     def __init__(self):
         super().__init__()
         self.title = pygame.image.load("assets/title.png")
+        self.background = pygame.image.load("assets/forest_bg.png")
+        self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.upper_left_branch = pygame.image.load("assets/branch.png")
         self.cucu = pygame.image.load("assets/static_cucu.png")
         self.start_button = Button(SCREEN_WIDTH/4 - 200, SCREEN_HEIGHT/2 - 50, 180, 50, "Start", (200, 200, 255), (150, 150, 255))
@@ -35,8 +37,9 @@ class MainMenu(State) :
 
     def draw(self, surface):
         # Clear screen
-        surface.fill((135, 206, 235))  # Sky blue background   
+        #surface.fill((135, 206, 235))  # Sky blue background   
         offset =35 # TODO: Remove (TEMP)     
+        surface.blit(self.background, (0, 0))
         self.start_button.draw(surface)
         self.quit_button.draw(surface)
         surface.blit(self.title, (SCREEN_WIDTH/2 - 920/2, 76))

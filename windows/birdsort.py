@@ -23,6 +23,8 @@ class Game(State):
         super().__init__()
         self.branches = []
         constants.num_colors = num_colors
+        self.background = pygame.image.load("assets/forest_bg.png")
+        self.background = pygame.transform.scale(self.background, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.selected_branch = None
         self.setup_level(num_branches, bird_list, is_custom)
         self.moves = 0
@@ -241,7 +243,8 @@ class Game(State):
         pass
 
     def draw(self, surface):
-        surface.fill((135, 206, 235))  # Sky blue background
+        #surface.fill((135, 206, 235))  # Sky blue background
+        surface.blit(self.background, (0, 0))
         
         for branch in self.branches:  # TODO: make this use the updated textures
             branch.draw(surface)

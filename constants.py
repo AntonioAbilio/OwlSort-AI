@@ -7,7 +7,7 @@ BIRD_SIZE = 80
 MAX_BIRDS_PER_BRANCH = 4
 COLORS = [
     (255, 0, 0),    # Red
-    (0, 0, 255),    # Blue
+    (255, 255, 255),# Brown
     (0, 255, 0),    # Green
     (255, 255, 0),  # Yellow
 ]
