@@ -40,7 +40,7 @@ class Game(State):
 
         algorithms = [["bfs",Algorithm.BFS], ["dfs-FA",Algorithm.DFS_FIRST_ACCEPT], ["dfs-Best",Algorithm.DFS_BEST], 
                       ["dls",Algorithm.DLS], ["it_deep",Algorithm.IT_DEEP], ["astar",Algorithm.ASTAR], 
-                      ["wastar",Algorithm.WASTAR], ["greedy",Algorithm.GREEDY]]
+                      ["wastar",Algorithm.WASTAR], ["greedy",Algorithm.GREEDY], ["uniform",Algorithm.UNIFORM]]
         
         total_buttons = len(algorithms)
         total_width = total_buttons * button_width
