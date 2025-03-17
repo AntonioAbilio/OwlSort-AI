@@ -15,7 +15,7 @@ class Branch:
         self.x = x
         self.y = y
         self.birds = []
-        self.rect = pygame.Rect(x, y, BRANCH_WIDTH, BRANCH_HEIGHT)
+        self.rect = pygame.Rect(x, y-100, BRANCH_WIDTH, BRANCH_HEIGHT+100)
         
         if not isMock:
             self.branch_sprite = pygame.image.load("assets/branch.png")   
