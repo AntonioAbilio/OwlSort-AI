@@ -2,6 +2,7 @@ import ast
 import tkinter as tk
 from tkinter import filedialog
 from collections import Counter
+import constants
 from models.bird import Bird
 import os
 
@@ -50,7 +51,7 @@ def validate_birds(rgb_list):
     color_counts = Counter(flat_list)
 
     # Check if all colors have exactly 4 occurrences
-    valid = all(count == 4 for count in color_counts.values())
+    valid = all(count == constants.MAX_BIRDS_PER_BRANCH for count in color_counts.values())
     
     if valid:
         return len(color_counts)

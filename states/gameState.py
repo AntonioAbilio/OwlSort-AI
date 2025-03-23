@@ -4,7 +4,7 @@ import constants
 
 class GameState:
     def __init__(self, branches, move_history=None, isMock=False):
-        self.branch_cap = 4
+        self.branch_cap = constants.MAX_BIRDS_PER_BRANCH
         self.branches = branches
         self.isMock = isMock
         self.move_history = move_history if move_history is not None else []
