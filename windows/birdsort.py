@@ -6,6 +6,7 @@ from algorithms.algorithm_picker import Algorithm, Solver
 from windows.state_manager import State
 from collections import deque
 from algorithms.solution_cache import SolutionCache
+import time
 
 
 from models.bird import Bird
@@ -21,6 +22,9 @@ from states.gameState import GameState
 class Game(State):
     def __init__(self, num_branches, bird_list=[], num_colors=4, is_custom=False):
         super().__init__()
+        self.current_time = time.time()
+        self.delta_time = 0
+
         self.branches = []
         constants.num_colors = num_colors
         self.background = pygame.image.load("assets/forest_bg.png")
@@ -39,6 +43,13 @@ class Game(State):
         button_width = 150
         button_height = 50
 
+        ai_button_width = 150
+        ai_button_height = 50
+        ai_button_x = constants.SCREEN_WIDTH - ai_button_width - 20
+        ai_button_y = 20
+        self.ai_button = Button(ai_button_x, ai_button_y, ai_button_width, ai_button_height, "AI Mode", (200, 200, 255), (150, 150, 255))
+        self.ai_mode = False
+        self.ai_algorithm = None
 
         algorithms = [["bfs",Algorithm.BFS], ["dfs-FA",Algorithm.DFS_FIRST_ACCEPT], ["dfs-Best",Algorithm.DFS_BEST], 
                       ["dls",Algorithm.DLS], ["it_deep",Algorithm.IT_DEEP], ["astar",Algorithm.ASTAR], 
@@ -114,11 +125,24 @@ class Game(State):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             
+            # Check if AI mode button was clicked
+            if self.ai_button.is_clicked(mouse_pos):
+                #change button color to green if AI mode is enabled
+                if self.ai_mode:
+                    self.ai_button.color = (200, 200, 255)
+                else:
+                    self.ai_button.color = (100, 255, 100)
+                self.ai_mode = not self.ai_mode
+                print(f"AI Mode {'enabled' if self.ai_mode else 'disabled'}")
+                return
+            
             # Check if any hint button was clicked
             for button, algorithm in self.hint_buttons:
                 if button.is_clicked(mouse_pos):
                     print(f"Hint button for {algorithm[0]} clicked")
                     self.get_hint(algorithm)
+                    if self.ai_mode:
+                        self.ai_algorithm = algorithm
                     return
             
             self.handle_click(mouse_pos)
@@ -240,7 +264,20 @@ class Game(State):
 
 
     def update(self):
-        pass
+        if self.ai_mode and self.ai_algorithm and not self.current_solver:
+            if self.current_time + constants.ALGORITHM_SLEEP < time.time():
+                self.current_time = time.time()
+                if self.solution_path:
+                    from_idx, to_idx = self.solution_path.pop(0)
+                    self.game_state.apply_move(from_idx, to_idx)
+                    self.moves += 1
+                    self.game_state.move_history.append((from_idx, to_idx))
+                    self.game_state = GameState(self.branches, self.game_state.move_history)
+                    if not self.solution_path:
+                        self.ai_mode = False
+                        print("AI Mode completed")
+                else:
+                    self.get_hint(self.ai_algorithm)
 
     def draw(self, surface):
         #surface.fill((135, 206, 235))  # Sky blue background
@@ -258,6 +295,8 @@ class Game(State):
             pygame.draw.rect(surface, (0, 255, 0), self.hint_from.rect, 3)  # Green for source
         if self.hint_to:
             pygame.draw.rect(surface, (255, 165, 0), self.hint_to.rect, 3)  # Orange for target
+        
+        self.ai_button.draw(surface)
         
         # Draw hint buttons (with loading state if active)
         for button, algorithm_info in self.hint_buttons:

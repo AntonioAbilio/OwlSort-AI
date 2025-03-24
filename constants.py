@@ -14,6 +14,7 @@ COLORS = [
 num_colors = 4
 
 ALGORITHM_TIMEOUT = 60  # seconds
+ALGORITHM_SLEEP = 0.5  # seconds
 
 import pygame
 clock = pygame.time.Clock()
