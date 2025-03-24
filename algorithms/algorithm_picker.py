@@ -55,7 +55,7 @@ class Solver:
             
             # Call the callback with empty solution if there was an error
             if callback:
-                callback([])
+                callback([], self.algorithm)
     
     def find_solution(self, game_state, callback=None):
         """
