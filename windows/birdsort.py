@@ -161,6 +161,8 @@ class Game(State):
                 # success = self.try_move_birds(self.selected_branch, clicked_branch)
                 if success:
                     print("Move successful")
+                    if (self.current_solver):
+                        self.current_solver.cancel()
                     if self.last_algorithm is not None:
                         self.solution_cache.update_after_move(self.game_state, (from_idx, clicked_index))
                     # Add the move to the game state history
