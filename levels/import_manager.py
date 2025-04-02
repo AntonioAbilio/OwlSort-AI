@@ -5,9 +5,12 @@ from collections import Counter
 import constants
 from models.bird import Bird
 import os
+import threading
+
 
 # Function to open file dialog and load level
-def load_level():
+def load_level(callback):
+
     root = tk.Tk()
     root.withdraw()  # Hide the root window
 
@@ -15,28 +18,34 @@ def load_level():
         title="Select Level File",
         filetypes=[("Text Files", "*.txt")]
     )
-    
-    if not os.path.exists(file_path):
-        print("File does not exist.")
-        return None
+    if not file_path or not os.path.exists(file_path):
+        print("File does not exist or no file selected.")
+        callback(None)
+        root.destroy()
+        return
     
     with open(file_path, 'r') as file:
         content = file.read().strip()  # Read and strip unnecessary whitespaces
-        # Convert the string representation into list of lists
         try:
             rgb_list = ast.literal_eval(content)
             branches = parse_level(rgb_list)
             (color_counts, max_birds_per_branch) = validate_birds(rgb_list)
             if color_counts is not None:
-                return (color_counts, max_birds_per_branch, branches)
+                callback((color_counts, max_birds_per_branch, branches))
             else:
                 print("Invalid level: Number of birds per color is not balanced.")
-                return None
+                callback(None)
+                root.destroy()
         except (SyntaxError, ValueError) as e:
             print(f"Error parsing file: {e}")
-            return None
+            callback(None)
+            root.destroy()
 
-def parse_level(level_data) :
+# Run the file dialog and processing in a separate thread
+def load_level_threaded(callback):
+    threading.Thread(target=lambda: load_level(callback)).start()
+
+def parse_level(level_data):
     branches = []
     for branch_data in level_data:
         branch = []
@@ -65,4 +74,3 @@ def validate_birds(rgb_list):
 
 def check_level_possible(gameState):
     pass
-    
