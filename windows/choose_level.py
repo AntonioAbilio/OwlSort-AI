@@ -1,6 +1,7 @@
 import pygame
 import sys
 from levels import import_manager
+from levels.level_generator import LevelGenerator
 from windows.state_manager import State
 from windows.birdsort import Game
 from constants import (
@@ -42,8 +43,9 @@ class ChooseLevel(State) :
                 result = import_manager.load_level()
                 if result is None:
                     return
-                (num_colors, level_data) = result
-                game = Game(num_branches=len(level_data), bird_list=level_data, is_custom=True, num_colors=num_colors)
+                (num_colors, max_birds_per_branch, level_data) = result
+                level = LevelGenerator.generate_level(bird_list=level_data)
+                game = Game(bird_list=level, max_birds_per_branch=max_birds_per_branch, num_branches=len(level_data), num_colors=num_colors) # FIXME: Make it not hard-coded
                 if game.check_level_possible():
                     print("Loaded Level:", level_data)  # Debugging print
                     self.next_state = game

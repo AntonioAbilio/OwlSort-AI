@@ -1,6 +1,7 @@
 import pygame
 from levels import import_manager
 from windows.state_manager import State
+from levels.level_generator import LevelGenerator
 from windows.birdsort import Game
 from constants import (
     SCREEN_WIDTH,
@@ -8,18 +9,19 @@ from constants import (
 )
 from models.button import Button
 
-LEVEL1_CONFIG =  6 #TODO: Change
-LEVEL2_CONFIG =  7 #TODO: Change
-LEVEL3_CONFIG =  7 #TODO: Change
-LEVEL4_CONFIG =  7 #TODO: Change
-LEVEL5_CONFIG =  7 #TODO: Change
-LEVEL6_CONFIG =  7 #TODO: Change 
-LEVEL7_CONFIG =  7 #TODO: Change 
-LEVEL8_CONFIG =  7 #TODO: Change 
-LEVEL9_CONFIG =  7 #TODO: Change 
-LEVEL10_CONFIG = 7 #TODO: Change 
-LEVEL11_CONFIG = 7 #TODO: Change 
-LEVEL12_CONFIG = 7 #TODO: Change 
+# Format (num_branches, max_birds_per_branch, num_colors)
+LEVEL1_CONFIG =  (8, 4, 4)
+LEVEL2_CONFIG =  (7, 4, 4)
+LEVEL3_CONFIG =  (6, 4, 4)
+LEVEL4_CONFIG =  (6, 4, 4)
+LEVEL5_CONFIG =  (6, 4, 4)
+LEVEL6_CONFIG =  (6, 7, 4) 
+LEVEL7_CONFIG =  (6, 4, 4) 
+LEVEL8_CONFIG =  (6, 4, 4) 
+LEVEL9_CONFIG =  (6, 4, 4) 
+LEVEL10_CONFIG = (6, 4, 4) 
+LEVEL11_CONFIG = (6, 4, 4) 
+LEVEL12_CONFIG = (6, 4, 4) 
 
 class LevelList(State) :
     def __init__(self):
@@ -57,51 +59,75 @@ class LevelList(State) :
                 return
             
             if self.level1_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL1_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL1_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level2_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL2_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL2_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level3_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL3_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL3_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level4_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL4_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL4_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level5_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL5_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL5_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level6_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL6_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL6_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level7_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL7_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL7_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level8_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL8_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL8_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level9_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL9_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL9_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level10_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL10_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL10_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level11_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL11_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL11_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
             if self.level12_button.is_clicked(mouse_pos):
-                self.next_state = Game(LEVEL12_CONFIG)
+                (num_branches, max_birds_per_branch, num_colors) = LEVEL12_CONFIG
+                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
                 return
             
     def draw(self, surface):

@@ -24,10 +24,10 @@ class Branch:
         self.id = id
     
     def add_bird(self, bird):
-        if len(self.birds) < MAX_BIRDS_PER_BRANCH and not self.is_completed:
-            self.birds.append(bird)
-            return True
-        return False
+        #if len(self.birds) < MAX_BIRDS_PER_BRANCH and not self.is_completed: #TODO: Remove
+        self.birds.append(bird)
+        return True
+        #return False #TODO: Remove
     
     def draw(self, surface):
         # Draw branch

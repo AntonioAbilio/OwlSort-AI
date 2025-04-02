@@ -26,11 +26,11 @@ def load_level():
         try:
             rgb_list = ast.literal_eval(content)
             branches = parse_level(rgb_list)
-            color_counts = validate_birds(rgb_list)
+            (color_counts, max_birds_per_branch) = validate_birds(rgb_list)
             if color_counts is not None:
-                return (color_counts, branches)
+                return (color_counts, max_birds_per_branch, branches)
             else:
-                print("Invalid level: Each color must appear exactly 4 times.")
+                print("Invalid level: Number of birds per color is not balanced.")
                 return None
         except (SyntaxError, ValueError) as e:
             print(f"Error parsing file: {e}")
@@ -50,11 +50,16 @@ def validate_birds(rgb_list):
     flat_list = [color for row in rgb_list for color in row]  # Flatten the nested list
     color_counts = Counter(flat_list)
 
-    # Check if all colors have exactly 4 occurrences
-    valid = all(count == constants.MAX_BIRDS_PER_BRANCH for count in color_counts.values())
+    # Check if all colors have exactly x occurrences
+    valid = all(count == list(color_counts.values())[0] for count in color_counts.values())
+    
+    max_branch_size = 0
+    for branch in rgb_list:
+        if len(branch) > max_branch_size:
+            max_branch_size = len(branch)
     
     if valid:
-        return len(color_counts)
+        return len(color_counts), max_branch_size
     return None
     
 

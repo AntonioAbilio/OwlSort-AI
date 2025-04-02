@@ -1,15 +1,8 @@
 import pygame 
-import sys
-import random
-import math
 from algorithms.algorithm_picker import Algorithm, Solver
 from windows.state_manager import State
 from collections import deque
 from algorithms.solution_cache import SolutionCache
-
-
-from models.bird import Bird
-from models.branch import Branch
 from models.button import Button
 
 import constants
@@ -19,14 +12,14 @@ from states.gameState import GameState
 
 
 class Game(State):
-    def __init__(self, num_branches, bird_list=[], num_colors=4, is_custom=False):
+    def __init__(self, bird_list, num_branches, max_birds_per_branch, num_colors):
         super().__init__()
-        self.branches = []
+        constants.MAX_BIRDS_PER_BRANCH = max_birds_per_branch
         constants.num_colors = num_colors
+        self.branches = bird_list
         self.background = pygame.image.load("assets/forest_bg.png")
         self.background = pygame.transform.scale(self.background, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.selected_branch = None
-        self.setup_level(num_branches, bird_list, is_custom)
         self.moves = 0
         self.completed_branches = 0
         self.font = pygame.font.SysFont(None, 36)
@@ -64,51 +57,6 @@ class Game(State):
         self.current_solver = None
         self.loading_dots = 0
         self.loading_timer = 0
-        
-    def setup_level(self, num_branches, bird_list, is_custom):
-        # Create branches with zigzag layout (left to right, top to bottom)
-        margin = 0
-        upper_offset = 150
-        id = 0
-        x = 0
-        y = 0
-        row = 0
-        left = True
-        all_birds = []
-        
-        if not is_custom:
-            random_birds=[]
-            # Create exactly MAX_BIRDS_PER_BRANCH birds of each color
-            for color in constants.COLORS:
-                for _ in range(constants.MAX_BIRDS_PER_BRANCH):
-                    random_birds.append(Bird(color))
-            random.shuffle(random_birds) # Shuffle all birds
-            bird_index = 0
-            for i in range(num_branches):  # FIXME: Make this not hardcoded
-                branch = []
-                for j in range(constants.MAX_BIRDS_PER_BRANCH):
-                    if bird_index < len(random_birds):
-                        branch.append(random_birds[bird_index])
-                        bird_index += 1
-                    else:
-                        break
-                all_birds.append(branch)
-        else:
-            all_birds = bird_list
-    
-        for i, branch_data in enumerate(all_birds):
-            y = upper_offset + row * (constants.BRANCH_HEIGHT + 100)
-            if left:
-                x = margin
-            else:
-                x = constants.SCREEN_WIDTH - margin - constants.BRANCH_WIDTH
-                row += 1
-            branch = Branch(x, y, id)
-            for color in branch_data:
-                branch.add_bird(color)
-            self.branches.append(branch)
-            left = not left
-            id += 1
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
