@@ -76,11 +76,6 @@ def find_solution(game_state, cancel_event, max_depth=-1):
     end_time = time.time()
     elapsed_time = end_time - start_time
     
-    print(f"\nBFS search completed:")
-    print_statistics(solutionFound = False)
-    """ print(f"States checked: {states_checked}")
-    print(f"Max queue size: {max_queue_size}")
-    print(f"Time taken: {elapsed_time:.2f} seconds")
-    print(f"No solution found within depth limit {max_depth}") """
+    print_statistics(elapsed_time=elapsed_time, solutionFound = False)
     
     return []

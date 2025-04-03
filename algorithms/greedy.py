@@ -29,9 +29,6 @@ def find_solution(game_state, cancel_event):
         if current_state.is_solved():
             end_time = time.time()
             elapsed_time = end_time - start_time
-            """ print(f"Solution found! Path length: {len(current_path)}")
-            print(f"Greedy Best-First Search stats: {states_checked} states checked")
-            print(f"Time taken: {elapsed_time:.5f} seconds") """
             print_statistics(current_path, "Greedy", states_checked, elapsed_time, current_memory_usage, starting_memory_usage, True)
             return current_path
        
@@ -50,5 +47,5 @@ def find_solution(game_state, cancel_event):
    
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print_statistics(solutionFound=False)
+    print_statistics(elapsed_time=elapsed_time, solutionFound=False)
     return []

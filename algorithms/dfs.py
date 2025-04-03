@@ -8,6 +8,7 @@ def find_solution(self, cancel_event, first_accept=True):
     start_time = time.time()
     starting_memory_usage = process_memory()
     current_memory_usage = 0
+    states_checked = 0
 
     start_state = self.clone()
 
@@ -23,6 +24,7 @@ def find_solution(self, cancel_event, first_accept=True):
 
     while stack:
         current_memory_usage = process_memory()
+        states_checked += 1
         if cancel_event.is_set():
             print("Search cancelled!")
             return []
@@ -72,9 +74,9 @@ def find_solution(self, cancel_event, first_accept=True):
     #print(f"Time taken: {elapsed_time:.5f} seconds")
 
     if best_path:
-        print_statistics(best_path, "DFS", -1, elapsed_time, current_memory_usage, starting_memory_usage, True)
+        print_statistics(best_path, "DFS", states_checked, elapsed_time, current_memory_usage, starting_memory_usage, True)
     else:
-        print_statistics(solutionFound = False)
+        print_statistics(elapsed_time=elapsed_time, solutionFound = False)
 
     
     return best_path

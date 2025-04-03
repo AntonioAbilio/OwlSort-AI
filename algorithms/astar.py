@@ -46,5 +46,5 @@ def find_solution(game_state, cancel_event):
     
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print_statistics(solutionFound = False)
+    print_statistics(elapsed_time=elapsed_time, solutionFound = False)
     return []

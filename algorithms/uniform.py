@@ -70,12 +70,10 @@ def find_solution(self, cancel_event):
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    """ print(f"Time taken: {elapsed_time:.5f} seconds")
-    print(f"Nodes explored: {nodes_explored}") """
     
     if best_path:
         print_statistics(best_path, "Uniform", nodes_explored, elapsed_time, current_memory_usage, starting_memory_usage, True)
         return deque(best_path)
     else:
-        print_statistics(solutionFound=False)
+        print_statistics(elapsed_time=elapsed_time, solutionFound=False)
         return deque([])
