@@ -1,10 +1,13 @@
 import sys
 from collections import deque
+from utils.utilities import *
 import time
 
 def find_solution(self, cancel_event, first_accept=True):
     """Use DFS to find the shortest solution path."""
     start_time = time.time()
+    starting_memory_usage = process_memory()
+    current_memory_usage = 0
 
     start_state = self.clone()
 
@@ -19,6 +22,7 @@ def find_solution(self, cancel_event, first_accept=True):
     best_path_length = sys.maxsize
 
     while stack:
+        current_memory_usage = process_memory()
         if cancel_event.is_set():
             print("Search cancelled!")
             return []
@@ -63,14 +67,16 @@ def find_solution(self, cancel_event, first_accept=True):
                         visited[new_state_hash] = len(new_path)
                         stack.append((new_state, new_path))
 
-    if best_path:
-        print(f"Best solution has {len(best_path)} moves")
-    else:
-        print("No solution found")
-
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Time taken: {elapsed_time:.5f} seconds")
+    #print(f"Time taken: {elapsed_time:.5f} seconds")
+
+    if best_path:
+        print_statistics(best_path, "DFS", -1, elapsed_time, current_memory_usage, starting_memory_usage, True)
+    else:
+        print_statistics(solutionFound = False)
+
+    
     return best_path
 
 

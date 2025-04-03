@@ -1,4 +1,5 @@
 from algorithms import algo_utils
+from utils.utilities import *
 import heapq
 import time
 
@@ -8,6 +9,7 @@ def find_solution(game_state, cancel_event):
     # In greedy best-first search, we only use the heuristic value
     # No consideration of path cost
     queue = [(algo_utils.evaluate_state(game_state), id(game_state), game_state, [])]
+    starting_memory_usage = process_memory()
     heapq.heapify(queue)
    
     # Track visited states so we don't repeat
@@ -15,6 +17,7 @@ def find_solution(game_state, cancel_event):
     states_checked = 0
    
     while queue:
+        current_memory_usage = process_memory()
         if cancel_event.is_set():
             return []
 
@@ -26,9 +29,10 @@ def find_solution(game_state, cancel_event):
         if current_state.is_solved():
             end_time = time.time()
             elapsed_time = end_time - start_time
-            print(f"Solution found! Path length: {len(current_path)}")
+            """ print(f"Solution found! Path length: {len(current_path)}")
             print(f"Greedy Best-First Search stats: {states_checked} states checked")
-            print(f"Time taken: {elapsed_time:.5f} seconds")
+            print(f"Time taken: {elapsed_time:.5f} seconds") """
+            print_statistics(current_path, "Greedy", states_checked, elapsed_time, current_memory_usage, starting_memory_usage, True)
             return current_path
        
         # Expand creates a list of all possible states from current state and the move to get there
@@ -46,6 +50,5 @@ def find_solution(game_state, cancel_event):
    
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print("No solution found")
-    print(f"Time taken: {elapsed_time:.5f} seconds")
+    print_statistics(solutionFound=False)
     return []
