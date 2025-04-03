@@ -43,11 +43,10 @@ class ChooseLevel(State) :
                 result = import_manager.load_level()
                 if result is None:
                     return
-                (num_colors, max_birds_per_branch, level_data) = result
-                level = LevelGenerator.generate_level(bird_list=level_data)
-                game = Game(bird_list=level, max_birds_per_branch=max_birds_per_branch, num_branches=len(level_data), num_colors=num_colors) # FIXME: Make it not hard-coded
+                (level, color_counts, max_birds_per_branch) = result
+                game = Game(bird_list=level, max_birds_per_branch=max_birds_per_branch, num_branches=len(level), num_colors=color_counts) # FIXME: Make it not hard-coded
                 if game.check_level_possible():
-                    print("Loaded Level:", level_data)  # Debugging print
+                    print("Loaded Level:", level)  # Debugging print
                     self.next_state = game
                 else:
                     print("Invalid level!")

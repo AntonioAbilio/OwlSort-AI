@@ -1,18 +1,13 @@
 import random
 import constants
+from collections import Counter
+import ast
 from models.bird import Bird
 from models.branch import Branch
 
 class LevelGenerator:
-    def generate_level(num_branches=6, max_birds_per_branch=4, num_colors=4, bird_list=None):
+    def generate_level(self, num_branches=6, max_birds_per_branch=4, num_colors=4, bird_list=None):
         # Create branches with zigzag layout (left to right, top to bottom)
-        margin = 0
-        upper_offset = 150
-        id = 0
-        x = 0
-        y = 0
-        row = 0
-        left = True
         all_birds = []
         branches = []
         
@@ -36,6 +31,38 @@ class LevelGenerator:
         else: # Level is custom
             all_birds = bird_list
 
+        self.create_game_structure(all_birds)
+        return branches
+    
+    # TODO: Separate in custom level and random level
+    def generate_level_from_file(self, file_path):
+        with open(file_path, 'r') as file:
+            content = file.read().strip()  # Read and strip unnecessary whitespaces
+            # Convert the string representation into list of lists
+            try:
+                rgb_list = ast.literal_eval(content)
+                branches = self.parse_level(rgb_list)
+                (color_counts, max_birds_per_branch) = self.validate_birds(rgb_list)
+                if color_counts is not None:
+                    level = self.create_game_structure(branches)
+                    return (level, color_counts, max_birds_per_branch)
+                else:
+                    print("Invalid level: Number of birds per color is not balanced.")
+                    return None
+            except (SyntaxError, ValueError) as e:
+                print(f"Error parsing file: {e}")
+                return None  
+        
+    def create_game_structure(self, all_birds):
+        branches = []
+        margin = 0
+        upper_offset = 150
+        id = 0
+        x = 0
+        y = 0
+        row = 0
+        left = True
+        
         for _, branch_data in enumerate(all_birds):
             y = upper_offset + row * (constants.BRANCH_HEIGHT + 100)
             if left:
@@ -49,5 +76,31 @@ class LevelGenerator:
             branches.append(branch)
             left = not left
             id += 1
-            
+        return branches        
+    
+    def parse_level(self, level_data) :
+        branches = []
+        for branch_data in level_data:
+            branch = []
+            for bird_color in branch_data:
+                bird = Bird(bird_color)
+                branch.append(bird)
+            branches.append(branch)
         return branches
+    
+    def validate_birds(self, rgb_list):
+        flat_list = [color for row in rgb_list for color in row]  # Flatten the nested list
+        color_counts = Counter(flat_list)
+
+        # Check if all colors have exactly x occurrences
+        valid = all(count == list(color_counts.values())[0] for count in color_counts.values())
+        
+        max_branch_size = 0
+        for branch in rgb_list:
+            if len(branch) > max_branch_size:
+                max_branch_size = len(branch)
+        
+        if valid:
+            return len(color_counts), max_branch_size
+        return None
+    

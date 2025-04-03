@@ -3,6 +3,8 @@ from levels import import_manager
 from windows.state_manager import State
 from levels.level_generator import LevelGenerator
 from windows.birdsort import Game
+from collections import Counter
+import ast
 from constants import (
     SCREEN_WIDTH,
     SCREEN_HEIGHT
@@ -10,18 +12,18 @@ from constants import (
 from models.button import Button
 
 # Format (num_branches, max_birds_per_branch, num_colors)
-LEVEL1_CONFIG =  (8, 4, 4)
-LEVEL2_CONFIG =  (7, 4, 4)
-LEVEL3_CONFIG =  (6, 4, 4)
-LEVEL4_CONFIG =  (6, 4, 4)
-LEVEL5_CONFIG =  (6, 4, 4)
-LEVEL6_CONFIG =  (6, 7, 4) 
-LEVEL7_CONFIG =  (6, 4, 4) 
-LEVEL8_CONFIG =  (6, 4, 4) 
-LEVEL9_CONFIG =  (6, 4, 4) 
-LEVEL10_CONFIG = (6, 4, 4) 
-LEVEL11_CONFIG = (6, 4, 4) 
-LEVEL12_CONFIG = (6, 4, 4) 
+LEVEL1_CONFIG  =  "levels/level_files/level1.cucu"
+LEVEL2_CONFIG  =  "levels/level_files/level2.cucu"
+LEVEL3_CONFIG  =  "levels/level_files/level3.cucu"
+LEVEL4_CONFIG  =  "levels/level_files/level4.cucu"
+LEVEL5_CONFIG  =  "levels/level_files/level5.cucu"
+LEVEL6_CONFIG  =  "levels/level_files/level6.cucu"
+LEVEL7_CONFIG  =  "levels/level_files/level7.cucu"
+LEVEL8_CONFIG  =  "levels/level_files/level8.cucu"
+LEVEL9_CONFIG  =  "levels/level_files/level9.cucu"
+LEVEL10_CONFIG =  "levels/level_files/level10.cucu"
+LEVEL11_CONFIG =  "levels/level_files/level11.cucu"
+LEVEL12_CONFIG =  "levels/level_files/level12.cucu"
 
 class LevelList(State) :
     def __init__(self):
@@ -50,6 +52,7 @@ class LevelList(State) :
         self.level12_button = Button(col3, SCREEN_HEIGHT/2 - offset_up + offset*3, 180, 50, "Level 12", (200, 200, 255), (150, 150, 255))
     
     def handle_event(self, event):
+        levelGenerator = LevelGenerator()
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             
@@ -59,21 +62,18 @@ class LevelList(State) :
                 return
             
             if self.level1_button.is_clicked(mouse_pos):
-                (num_branches, max_birds_per_branch, num_colors) = LEVEL1_CONFIG
-                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
-                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                (level, color_counts, max_birds_per_branch) = levelGenerator.generate_level_from_file(LEVEL1_CONFIG)
+                self.next_state = Game(bird_list=level, num_branches=len(level), max_birds_per_branch=max_birds_per_branch, num_colors=color_counts)
                 return
             
             if self.level2_button.is_clicked(mouse_pos):
-                (num_branches, max_birds_per_branch, num_colors) = LEVEL2_CONFIG
-                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
-                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                (level, color_counts, max_birds_per_branch) = levelGenerator.generate_level_from_file(LEVEL2_CONFIG)
+                self.next_state = Game(bird_list=level, num_branches=len(level), max_birds_per_branch=max_birds_per_branch, num_colors=color_counts)
                 return
             
             if self.level3_button.is_clicked(mouse_pos):
-                (num_branches, max_birds_per_branch, num_colors) = LEVEL3_CONFIG
-                level = LevelGenerator.generate_level(num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
-                self.next_state = Game(bird_list=level, num_branches=num_branches, max_birds_per_branch=max_birds_per_branch, num_colors=num_colors)
+                (level, color_counts, max_birds_per_branch) = levelGenerator.generate_level_from_file(LEVEL3_CONFIG)
+                self.next_state = Game(bird_list=level, num_branches=len(level), max_birds_per_branch=max_birds_per_branch, num_colors=color_counts)
                 return
             
             if self.level4_button.is_clicked(mouse_pos):
@@ -149,3 +149,5 @@ class LevelList(State) :
         self.level12_button.draw(surface)
         surface.blit(self.text_surface, (SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
         
+  
+

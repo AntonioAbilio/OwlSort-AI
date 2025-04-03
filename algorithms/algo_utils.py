@@ -16,36 +16,37 @@ def expand_states(game_state):
                 next_states.append((new_state, from_idx, to_idx))
     return next_states
 
-def evaluate_state(game_state): #calculate euristic distance to solution (lower better)
+def evaluate_state(game_state):
     assert isinstance(game_state, GameState)
-    score = 0
     
-    #completed branches are amazing for solve
-    completed_count = 0
-    for branch in game_state.branches:
-        if len(branch.birds) == MAX_BIRDS_PER_BRANCH:
-            if all(bird.color == branch.birds[0].color for bird in branch.birds):
-                completed_count += 1
-    
-    score -= completed_count * 100
-    
-    #same color together good
+    unsorted_branches = 0
+    completed_branches = 0
     for branch in game_state.branches:
         if not branch.birds:
             continue
-            
-        color_counts = {}
+        if len(branch.birds) == MAX_BIRDS_PER_BRANCH and all(bird.color == branch.birds[0].color for bird in branch.birds):
+            completed_branches += 1
+        else:
+            unsorted_branches += 1
+
+    color_group_counts = {}
+    for branch in game_state.branches:
+        if not branch.birds:
+            continue
+        current_color = None
         for bird in branch.birds:
-            color_counts[bird.color] = color_counts.get(bird.color, 0) + 1
-        
-        for count in color_counts.items():
-            if count[1] > 1:
-                score -= (count[1] * count[1])  #square cause this is really good
+            if bird.color != current_color:
+                current_color = bird.color
+                color_group_counts[current_color] = color_group_counts.get(current_color, 0) + 1
+
+    merge_moves = sum((count - 1) for count in color_group_counts.values() if count > 0)
     
-    #longer solution is worse
-    score += game_state.get_number_of_moves() * 0.5
-    
-    return score
+    heuristic_lower_bound = max(unsorted_branches, merge_moves)
+
+
+
+    return heuristic_lower_bound #+ move_penalty
+
 
 def is_deadlock(game_state):
     assert isinstance(game_state, GameState)
