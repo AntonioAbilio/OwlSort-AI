@@ -1,10 +1,10 @@
 from models.branch import Branch
 from models.bird import Bird
-import constants
+from global_vars import Globals
 
 class GameState:
     def __init__(self, branches, move_history=None, isMock=False):
-        self.branch_cap = constants.MAX_BIRDS_PER_BRANCH
+        self.branch_cap = Globals.MAX_BIRDS_PER_BRANCH
         self.branches = branches
         self.isMock = isMock
         self.move_history = move_history if move_history is not None else []
@@ -116,7 +116,7 @@ class GameState:
     def is_solved(self):
         completed_count = 0
         for branch in self.branches:
-            if len(branch.birds) == constants.MAX_BIRDS_PER_BRANCH:
+            if len(branch.birds) == Globals.MAX_BIRDS_PER_BRANCH:
                 if all(bird.color == branch.birds[0].color for bird in branch.birds):
                     completed_count += 1
-        return completed_count == constants.num_colors
+        return completed_count == Globals.NUM_COLORS

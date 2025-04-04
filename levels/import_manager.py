@@ -2,7 +2,6 @@ import ast
 import tkinter as tk
 from tkinter import filedialog
 from collections import Counter
-import constants
 from models.bird import Bird
 from levels.level_generator import LevelGenerator
 import os

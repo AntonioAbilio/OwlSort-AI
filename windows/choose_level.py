@@ -4,10 +4,7 @@ from levels import import_manager
 from levels.level_generator import LevelGenerator
 from windows.state_manager import State
 from windows.birdsort import Game
-from constants import (
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT
-)
+from global_vars import Globals
 from models.button import Button
 
 class ChooseLevel(State):
@@ -15,13 +12,27 @@ class ChooseLevel(State):
         super().__init__()
         self.font = pygame.font.Font(None, 70)
         self.background = pygame.image.load("assets/forest_bg.png")
-        self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.text_surface = self.font.render("Choose Level", True, (255, 255, 255))
+        self.background = pygame.transform.scale(self.background, (Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
+        self.background = self.background.convert_alpha()  # Optimize for performance
+
+        self.text_surface = self.font.render("Choose Level", True, (0, 0, 0))
+        self.text_surface = self.text_surface.convert_alpha()  # Optimize for performance
+
+        self.gap_between_branches_y = 188
+        self.upper_margin = 2 * Globals.SCREEN_HEIGHT/5
         self.upper_left_branch = pygame.image.load("assets/branch.png")
+        self.upper_left_branch = self.upper_left_branch.convert_alpha()  # Optimize for performance
+        
+        self.offset=-Globals.BIRD_SIZE+25
         self.cucu = pygame.image.load("assets/static_cucu.png")
-        self.go_back_button = Button(SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", (200, 200, 255), (150, 150, 255))
-        self.levelList_button = Button(SCREEN_WIDTH/4 - 270, SCREEN_HEIGHT/2 - 50, 250, 50, "Level List", (200, 200, 255), (150, 150, 255))
-        self.custom_button = Button(SCREEN_WIDTH/2 + SCREEN_WIDTH/4 + 20, SCREEN_HEIGHT/2 - 50, 250, 50, "Custom (Load from file)", (200, 200, 255), (150, 150, 255))
+        self.cucu = self.cucu.convert_alpha()  # Optimize for performance
+
+        self.button_width = 180
+        self.button_width2 = 250
+        self.button_height = 50
+        self.go_back_button = Button(Globals.SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", (200, 200, 255), (150, 150, 255))
+        self.levelList_button = Button(Globals.BRANCH_WIDTH/4, self.upper_margin - self.button_height, self.button_width, self.button_height, "Level List", (200, 200, 255), (150, 150, 255))
+        self.custom_button = Button(Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + 2*self.button_width2/3, self.upper_margin - self.button_height, self.button_width2, self.button_height, "Custom (Load from file)", (200, 200, 255), (150, 150, 255))
         self.loading = False  # To indicate if a level is being loaded
 
     def handle_event(self, event):
@@ -65,14 +76,21 @@ class ChooseLevel(State):
             
     def draw(self, surface):
         # Clear screen
-        surface.blit(self.background, (0, 0))
+        scaled_background = pygame.transform.scale(self.background, (surface.get_width(), surface.get_height()))
+        surface.blit(scaled_background, (0, 0))  # Draw scaled background
         offset = 35  # TODO: Remove (TEMP)
   
         self.go_back_button.draw(surface)
         self.levelList_button.draw(surface)
         self.custom_button.draw(surface)
-        surface.blit(self.text_surface, (SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
-        surface.blit(self.upper_left_branch, (0, 384))  # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (SCREEN_WIDTH - 472, 384))  # FIXME: Change to normal branch instead of image
-        surface.blit(self.cucu, (SCREEN_WIDTH - 430, 288-offset))  # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.cucu, True, False), (280, 288-offset))  # FIXME: Change to normal branch instead of image
+        surface.blit(self.text_surface, (Globals.SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
+        
+        # Draw branches
+        surface.blit(self.upper_left_branch, (0, self.upper_margin))  # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH, self.upper_margin))  # FIXME: Change to normal branch instead of image
+        
+        # Draw birds
+        surface.blit(self.cucu, (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))  # FIXME: Change to normal branch instead of image
+        surface.blit(pygame.transform.flip(self.cucu, True, False), (Globals.BRANCH_WIDTH - 2*Globals.BIRD_SIZE - Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))  # FIXME: Change to normal branch instead of image
+
+        

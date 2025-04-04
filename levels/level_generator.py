@@ -1,5 +1,5 @@
 import random
-import constants
+from global_vars import Globals
 from collections import Counter
 import ast
 from models.bird import Bird
@@ -14,7 +14,7 @@ class LevelGenerator:
         if bird_list == None: # Generate random birds (level is not custom)
             random_birds=[]
             # Create exactly MAX_BIRDS_PER_BRANCH birds of each color
-            for color in constants.COLORS: # TODO: Make this dynamic
+            for color in Globals.COLORS: # TODO: Make this dynamic
                 for _ in range(max_birds_per_branch):
                     random_birds.append(Bird(color))
             random.shuffle(random_birds) # Shuffle all birds
@@ -64,11 +64,11 @@ class LevelGenerator:
         left = True
         
         for _, branch_data in enumerate(all_birds):
-            y = upper_offset + row * (constants.BRANCH_HEIGHT + 100)
+            y = upper_offset + row * (Globals.BRANCH_HEIGHT + 100)
             if left:
                 x = margin
             else:
-                x = constants.SCREEN_WIDTH - margin - constants.BRANCH_WIDTH
+                x = Globals.SCREEN_WIDTH - margin - Globals.BRANCH_WIDTH
                 row += 1
             branch = Branch(x, y, id)
             for color in branch_data:
