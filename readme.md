@@ -8,7 +8,6 @@ A game with ai designed to solve puzzles inspired by the mobile game Bird Sort 2
 
 <img src="./assets/titlePrintScreen.png" alt="Cucu fly" width="20000" align="center">
 
-
 ## 🎮 **About OwlSort**
 
 OwlSor is a captivating puzzle game where players sort colored birds perched on tree branches, aiming to group birds of the same color together. Once grouped, these birds can fly away, freeing up branch space for further sorting. The game introduces challenges such as limited branch space and specific sorting rules, making it both engaging and mentally stimulating.
