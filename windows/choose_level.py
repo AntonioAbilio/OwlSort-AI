@@ -32,8 +32,8 @@ class ChooseLevel(State):
         self.button_width2 = 250
         self.button_height = 50
         self.go_back_button = Button(Globals.SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", (200, 200, 255), (150, 150, 255))
-        self.levelList_button = Button(Globals.BRANCH_WIDTH/4, self.upper_margin - self.button_height, self.button_width, self.button_height, "Level List", (200, 200, 255), (150, 150, 255))
-        self.custom_button = Button(Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + 2*self.button_width2/3, self.upper_margin - self.button_height, self.button_width2, self.button_height, "Custom (Load from file)", (200, 200, 255), (150, 150, 255))
+        self.levelList_button = Button(Globals.MOCK_BRANCH_WIDTH/4, self.upper_margin - self.button_height, self.button_width, self.button_height, "Level List", (200, 200, 255), (150, 150, 255))
+        self.custom_button = Button(Globals.SCREEN_WIDTH - Globals.MOCK_BRANCH_WIDTH + 2*self.button_width2/3, self.upper_margin - self.button_height, self.button_width2, self.button_height, "Custom (Load from file)", (200, 200, 255), (150, 150, 255))
         self.loading = False  # To indicate if a level is being loaded
 
     def handle_event(self, event):
@@ -90,8 +90,8 @@ class ChooseLevel(State):
         
         # Draw branches
         surface.blit(self.upper_left_branch, (0, self.upper_margin))
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + self.branch_margin, self.upper_margin))
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.MOCK_BRANCH_WIDTH + self.branch_margin, self.upper_margin))
         
         # Draw birds
-        surface.blit(self.cucu, (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))
-        surface.blit(pygame.transform.flip(self.cucu, True, False), (Globals.BRANCH_WIDTH - 2*Globals.BIRD_SIZE - Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))
+        surface.blit(self.cucu, (Globals.SCREEN_WIDTH - Globals.MOCK_BRANCH_WIDTH + Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))
+        surface.blit(pygame.transform.flip(self.cucu, True, False), (Globals.MOCK_BRANCH_WIDTH - 2*Globals.BIRD_SIZE - Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))

@@ -4,6 +4,7 @@ from global_vars import Globals
 
 class GameState:
     def __init__(self, branches, move_history=None, isMock=False):
+        self.total_birds_per_color = Globals.TOTAL_BIRDS_PER_COLOR
         self.branch_cap = Globals.MAX_BIRDS_PER_BRANCH
         self.branches = branches
         self.isMock = isMock
@@ -98,7 +99,7 @@ class GameState:
         self.move_history.append((from_idx, to_idx))
         
         # Check completion
-        if len(to_branch.birds) == self.branch_cap:  # Assuming MAX_BIRDS_PER_BRANCH is 4
+        if len(to_branch.birds) == self.total_birds_per_color:
             if all(bird.color == to_branch.birds[0].color for bird in to_branch.birds):
                 to_branch.is_completed = True
 
@@ -116,7 +117,7 @@ class GameState:
     def is_solved(self):
         completed_count = 0
         for branch in self.branches:
-            if len(branch.birds) == Globals.MAX_BIRDS_PER_BRANCH:
+            if len(branch.birds) == Globals.TOTAL_BIRDS_PER_COLOR:
                 if all(bird.color == branch.birds[0].color for bird in branch.birds):
                     completed_count += 1
         return completed_count == Globals.NUM_COLORS

@@ -5,13 +5,13 @@ class Branch:
     def __init__(self, x, y, id, isMock=False):
         if x < (Globals.SCREEN_WIDTH/2): self.side = "left"
         else: self.side = "right"
-        self.x = x
+        self.x = x 
         self.y = y
         self.birds = []
         self.rect = pygame.Rect(x, y-100, Globals.BRANCH_WIDTH, Globals.BRANCH_HEIGHT+100)
         
         if not isMock:
-            self.branch_sprite = pygame.image.load("assets/branch.png")   
+            self.branch_sprite = pygame.image.load("assets/long_branch.png")   
         
         self.is_completed = False
         self.id = id
@@ -32,7 +32,7 @@ class Branch:
         # Draw birds on branch
         if self.side == "left":
             for i, bird in enumerate(self.birds):
-                bird_x = self.x + (i * (Globals.BIRD_SIZE + 10))
+                bird_x = (i * (Globals.BIRD_SIZE + 10))
                 bird_y = self.y - Globals.bird_height - 5
                 bird.draw(surface, (bird_x, bird_y), flip=True)
     

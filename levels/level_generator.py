@@ -11,6 +11,9 @@ class LevelGenerator:
         all_birds = []
         branches = []
         
+        Globals.MAX_BIRDS_PER_BRANCH = max_birds_per_branch
+        Globals.TOTAL_BIRDS_PER_COLOR = max_birds_per_branch 
+        
         if bird_list == None: # Generate random birds (level is not custom)
             random_birds=[]
             # Create exactly MAX_BIRDS_PER_BRANCH birds of each color
@@ -52,20 +55,31 @@ class LevelGenerator:
             try:
                 rgb_list = ast.literal_eval(content)
                 branches = self.parse_level(rgb_list)
-                (color_counts, max_birds_per_branch) = self.validate_birds(rgb_list)
-                if color_counts is not None:
-                    level = self.create_game_structure(branches)
-                    return (level, color_counts, max_birds_per_branch)
-                else:
+                (color_counts, max_birds_per_branch, total_birds_per_color) = self.validate_birds(rgb_list)
+                Globals.MAX_BIRDS_PER_BRANCH = max_birds_per_branch
+                Globals.TOTAL_BIRDS_PER_COLOR = total_birds_per_color                
+                if color_counts is None:
                     print("Invalid level: Number of birds per color is not balanced.")
                     return None
+                elif (total_birds_per_color > 7) or (max_birds_per_branch > 7):
+                    print("Invalid level: Too many birds per color.")
+                    return None
+                elif max_birds_per_branch < total_birds_per_color:
+                    print("Invalid level: Branches are not big enough.")
+                    return None
+                elif len(branches) > 10:
+                    print("Invalid level: Too many branches.")
+                    return None
+                else: # Level is valid
+                    level = self.create_game_structure(branches)
+                    return (level, color_counts, max_birds_per_branch)
             except (SyntaxError, ValueError) as e:
                 print(f"Error parsing file: {e}")
                 return None  
         
     def create_game_structure(self, all_birds):
         branches = []
-        margin = 0
+        margin = 50
         upper_offset = 150
         id = 0
         x = 0
@@ -76,9 +90,9 @@ class LevelGenerator:
         for _, branch_data in enumerate(all_birds):
             y = upper_offset + row * (Globals.BRANCH_HEIGHT + 100)
             if left:
-                x = 0
+                x = 0 - Globals.BRANCH_WIDTH + Globals.MAX_BIRDS_PER_BRANCH*(Globals.BIRD_SIZE+20) + margin
             else:
-                x = Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + margin
+                x = Globals.SCREEN_WIDTH - Globals.MAX_BIRDS_PER_BRANCH*(Globals.BIRD_SIZE+20) - margin
                 row += 1
             branch = Branch(x, y, id)
             for color in branch_data:
@@ -111,6 +125,9 @@ class LevelGenerator:
                 max_branch_size = len(branch)
         
         if valid:
-            return len(color_counts), max_branch_size
+            total_birds_per_color = list(color_counts.values())[0]
+            if total_birds_per_color > max_branch_size:
+                max_branch_size = total_birds_per_color
+            return len(color_counts), max_branch_size, total_birds_per_color
         return None
     

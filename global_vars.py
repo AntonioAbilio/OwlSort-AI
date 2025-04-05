@@ -7,7 +7,8 @@ class Globals:
     DELTA_TIME = 0.016  # Default delta time for 60 FPS
 
     # Sprite Dimensions
-    BRANCH_WIDTH = 480
+    MOCK_BRANCH_WIDTH = 480
+    BRANCH_WIDTH = 1200
     BRANCH_HEIGHT = 60
     BIRD_SIZE = 80
     bird_height = 40
@@ -16,6 +17,7 @@ class Globals:
     # Game Settings
     MAX_BIRDS_PER_BRANCH = 4
     NUM_COLORS = 4
+    TOTAL_BIRDS_PER_COLOR = 4
     
     # Algorithm Settings
     ALGORITHM_TIMEOUT = 60  # seconds

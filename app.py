@@ -17,8 +17,6 @@ programIcon = pygame.image.load('assets/static_cucu.png')
 pygame.display.set_icon(programIcon)
 
 # Set up the screen
-#ctypes.windll.shcore.SetProcessDpiAwareness(1)  # Enable DPI scaling # TODO: This might be better for scaling (Test with a non 4k display)
-
 screen = pygame.display.set_mode((Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
 pygame.display.set_caption("Bird Sort 2: Color Puzzle")
 clock = pygame.time.Clock()
@@ -27,8 +25,7 @@ Globals.DELTA_TIME = clock.tick(60) / 1000.0
 def main():
     mainMenu = MainMenu()
     stateManager = StateManager(mainMenu)
-    print("Game initialized. Press the hint button to test BFS algorithm.")
-    
+        
     # Main game loop
     running = True
     while running:
