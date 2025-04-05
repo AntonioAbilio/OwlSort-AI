@@ -1,4 +1,5 @@
 from algorithms import algo_utils
+from utils.utilities import *
 import heapq
 import time
 
@@ -12,7 +13,12 @@ def find_solution(game_state, cancel_event):
     visited = set([hash(game_state)])
     states_checked = 0
     
+    starting_memory_usage = process_memory()
+    current_memory_usage = 0
+    
     while queue:
+        current_memory_usage = process_memory()
+
         if cancel_event.is_set():
             return []
         states_checked += 1
@@ -23,9 +29,7 @@ def find_solution(game_state, cancel_event):
         if current_state.is_solved():
             end_time = time.time()
             elapsed_time = end_time - start_time
-            print(f"Solution found! Path length: {len(current_path)}")
-            print(f"A* stats: {states_checked} states checked")
-            print(f"Time taken: {elapsed_time:.5f} seconds")
+            print_statistics(current_path, "A*", states_checked, elapsed_time, current_memory_usage, starting_memory_usage, True)
             return current_path
         
         #expand creates a list of all possible states from current state and the move to get there
@@ -42,6 +46,5 @@ def find_solution(game_state, cancel_event):
     
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print("No solution found")
-    print(f"Time taken: {elapsed_time:.5f} seconds")
+    print_statistics(elapsed_time=elapsed_time, solutionFound = False)
     return []

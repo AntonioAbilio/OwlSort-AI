@@ -1,11 +1,13 @@
 import sys
 from collections import deque
+from utils.utilities import *
 import time
 from algorithms import algo_utils
 import heapq
 
 def find_solution(self, cancel_event):
     """Use Dijkstra's Algorithm to find the shortest solution path."""
+    starting_memory_usage = process_memory()
     start_time = time.time()
 
     start_state = self.clone()
@@ -28,6 +30,7 @@ def find_solution(self, cancel_event):
     nodes_explored = 0
     
     while priority_queue and not cancel_event.is_set():
+        current_memory_usage = process_memory()
         # Get state with lowest cost from the priority queue
         current_cost, current_hash, current_state, path_so_far = heapq.heappop(priority_queue)
         nodes_explored += 1
@@ -64,17 +67,13 @@ def find_solution(self, cancel_event):
             # Add new state to the priority queue
             heapq.heappush(priority_queue, (new_cost, new_hash, new_state, new_path))
     
-    if best_path:
-        print(f"Best solution has {len(best_path)} moves")
-    else:
-        print("No solution found")
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Time taken: {elapsed_time:.5f} seconds")
-    print(f"Nodes explored: {nodes_explored}")
     
     if best_path:
+        print_statistics(best_path, "Uniform", nodes_explored, elapsed_time, current_memory_usage, starting_memory_usage, True)
         return deque(best_path)
     else:
+        print_statistics(elapsed_time=elapsed_time, solutionFound=False)
         return deque([])

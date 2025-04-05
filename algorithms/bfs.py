@@ -1,4 +1,5 @@
 from algorithms import algo_utils
+from utils.utilities import *
 from collections import deque
 import time
 
@@ -25,10 +26,14 @@ def find_solution(game_state, cancel_event, max_depth=-1):
     # Setup for BFS - use deque instead of list for efficient queue operations
     queue = deque([(game_state, [], 0)])  # (state, move_path, depth)
     visited = set([hash(game_state)])  # Use hash to track visited states
+    starting_memory_usage = process_memory()
+    current_memory_usage = 0
     states_checked = 0
     max_queue_size = 1
     
     while queue:
+        current_memory_usage = process_memory()
+
         if cancel_event.is_set():
             return []
         
@@ -44,10 +49,12 @@ def find_solution(game_state, cancel_event, max_depth=-1):
             end_time = time.time()
             elapsed_time = end_time - start_time
             
-            print(f"\nBFS search completed:")
+            """ print(f"\nBFS search completed:")
             print(f"States checked: {states_checked}")
             print(f"Max queue size: {max_queue_size}")
-            print(f"Time taken: {elapsed_time:.2f} seconds")
+            print(f"Time taken: {elapsed_time:.2f} seconds") """
+
+            print_statistics(current_path, "BFS", states_checked, elapsed_time, current_memory_usage, starting_memory_usage, True)
             
             return current_path
         
@@ -69,10 +76,6 @@ def find_solution(game_state, cancel_event, max_depth=-1):
     end_time = time.time()
     elapsed_time = end_time - start_time
     
-    print(f"\nBFS search completed:")
-    print(f"States checked: {states_checked}")
-    print(f"Max queue size: {max_queue_size}")
-    print(f"Time taken: {elapsed_time:.2f} seconds")
-    print(f"No solution found within depth limit {max_depth}")
+    print_statistics(elapsed_time=elapsed_time, solutionFound = False)
     
     return []

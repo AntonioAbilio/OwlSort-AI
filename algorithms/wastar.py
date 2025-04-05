@@ -1,5 +1,6 @@
 from algorithms import algo_utils
 from constants import ALGORITHM_TIMEOUT
+from utils.utilities import *
 import heapq
 import time
 
@@ -19,7 +20,11 @@ def find_solution(game_state, cancel_event, weight=5.5): #TODO: Might need to ch
     visited = set([hash(game_state)])
     states_checked = 0
    
+    starting_memory_usage = process_memory()
+    current_memory_usage = 0
+    
     while queue:
+        current_memory_usage = process_memory()
         if cancel_event.is_set():
             return []
         
@@ -30,10 +35,7 @@ def find_solution(game_state, cancel_event, weight=5.5): #TODO: Might need to ch
         if current_state.is_solved():
             end_time = time.time()
             elapsed_time = end_time - start_time
-            print(f"Weight used: {weight}")
-            print(f"Solution found! Path length: {len(current_path)}")
-            print(f"Weighted A* stats: {states_checked} states checked")
-            print(f"Time taken: {elapsed_time:.5f} seconds")
+            print_statistics(current_path, "Weighted A*", states_checked, elapsed_time, current_memory_usage, starting_memory_usage, True)
             return current_path
        
         for new_state, from_idx, to_idx in algo_utils.expand_states(current_state):
@@ -53,6 +55,5 @@ def find_solution(game_state, cancel_event, weight=5.5): #TODO: Might need to ch
    
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print("No solution found")
-    print(f"Time taken: {elapsed_time:.5f} seconds")
+    print_statistics(elapsed_time=elapsed_time, solutionFound = False)
     return []
