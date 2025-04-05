@@ -27,8 +27,8 @@ class MainMenu(State) :
         self.gap_between_branches_y = 188
         self.button_height = 50 
         self.button_width = 180
-        self.start_button = Button(Globals.MOCK_BRANCH_WIDTH/4, self.upper_margin - self.button_height, self.button_width, self.button_height, "Start", (200, 200, 255), (150, 150, 255))
-        self.quit_button = Button(Globals.MOCK_BRANCH_WIDTH/4, self.upper_margin - self.button_height + self.gap_between_branches_y, self.button_width, self.button_height, "Quit", (200, 200, 255), (150, 150, 255))
+        self.start_button = Button(Globals.MOCK_BRANCH_WIDTH/4, self.upper_margin - self.button_height, self.button_width, self.button_height, "Start", Globals.BUTTON_COLOR, Globals.BUTTON_HOVER_COLOR)
+        self.quit_button = Button(Globals.MOCK_BRANCH_WIDTH/4, self.upper_margin - self.button_height + self.gap_between_branches_y, self.button_width, self.button_height, "Quit", Globals.BUTTON_COLOR, Globals.BUTTON_HOVER_COLOR)
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:

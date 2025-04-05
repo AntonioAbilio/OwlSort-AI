@@ -29,6 +29,7 @@ def load_level(callback):
         else:
             (level, color_counts, max_birds_per_branch) = result
             callback ((level, color_counts, max_birds_per_branch))
+            root.destroy()
     except (SyntaxError, ValueError) as e:
         print(f"Error parsing file: {e}")
         callback(None)

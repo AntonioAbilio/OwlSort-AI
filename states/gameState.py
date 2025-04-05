@@ -102,6 +102,8 @@ class GameState:
         if len(to_branch.birds) == self.total_birds_per_color:
             if all(bird.color == to_branch.birds[0].color for bird in to_branch.birds):
                 to_branch.is_completed = True
+                if not self.isMock:
+                    Globals.COMPLETED_BRANCHES += 1
 
         return True
 

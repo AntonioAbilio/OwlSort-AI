@@ -18,12 +18,16 @@ class Globals:
     MAX_BIRDS_PER_BRANCH = 4
     NUM_COLORS = 4
     TOTAL_BIRDS_PER_COLOR = 4
+    COMPLETED_BRANCHES = 0
     
     # Algorithm Settings
     ALGORITHM_TIMEOUT = 60  # seconds
     ALGORITHM_SLEEP = 0.5  # seconds
     
     # Colors
+    BUTTON_COLOR = (246, 249, 219) # Light Greenish
+    BUTTON_HOVER_COLOR = (163, 171, 132) # Darker Greenish
+    BUTTON_TOGGLED_COLOR = (102, 107, 83) # Even Darker Greenish
     COLORS = [
         (255, 0, 0),    # Red
         (255, 255, 255),# Brown

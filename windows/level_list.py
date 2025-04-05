@@ -40,8 +40,8 @@ class LevelList(State) :
         col3 = Globals.SCREEN_WIDTH/2 + 250 
         button_width = 180
         button_height = 50
-        button_color = (200, 200, 255)
-        hover_color = (150, 150, 255)
+        button_color = Globals.BUTTON_COLOR
+        hover_color = Globals.BUTTON_HOVER_COLOR
         self.go_back_button = Button(Globals.SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", button_color, hover_color)
         self.level1_button =  Button(col1, Globals.SCREEN_HEIGHT/2 - offset_up           , button_width, button_height, "Level 1" , button_color, hover_color)
         self.level2_button =  Button(col1, Globals.SCREEN_HEIGHT/2 - offset_up + offset  , button_width, button_height, "Level 2" , button_color, hover_color)

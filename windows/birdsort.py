@@ -17,6 +17,7 @@ class Game(State):
         super().__init__()
         self.current_time = time.time()
         Globals.MAX_BIRDS_PER_BRANCH = max_birds_per_branch
+        Globals.COMPLETED_BRANCHES = 0
 
         self.branches = []
         Globals.NUM_COLORS = num_colors
@@ -30,7 +31,7 @@ class Game(State):
         self.background = pygame.transform.scale(self.background, (Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
         self.selected_branch = None
         self.moves = 0
-        self.completed_branches = 0
+        self.completed_branches = Globals.COMPLETED_BRANCHES
         self.font = pygame.font.SysFont(None, 36)
 
         self.solution_cache = SolutionCache()
@@ -45,7 +46,7 @@ class Game(State):
         ai_button_height = 50
         ai_button_x = Globals.SCREEN_WIDTH - ai_button_width - 20
         ai_button_y = 20
-        self.ai_button = Button(ai_button_x, ai_button_y, ai_button_width, ai_button_height, "AI Mode", (200, 200, 255), (150, 150, 255))
+        self.ai_button = Button(ai_button_x, ai_button_y, ai_button_width, ai_button_height, "AI Mode", Globals.BUTTON_COLOR, Globals.BUTTON_HOVER_COLOR)
         self.ai_mode = False
         self.ai_algorithm = None
 
@@ -60,7 +61,7 @@ class Game(State):
         for i, algorithm in enumerate(algorithms):
             x = spacing + i * (button_width + spacing)
             y = Globals.SCREEN_HEIGHT - button_height - 20
-            button = Button(x, y, button_width, button_height, f"Hint ({algorithm[0]})",(200, 200, 255), (150, 150, 255))
+            button = Button(x, y, button_width, button_height, f"Hint ({algorithm[0]})", Globals.BUTTON_COLOR, Globals.BUTTON_HOVER_COLOR)
             self.hint_buttons.append((button, algorithm))
             
         self.hint_from = None
@@ -82,9 +83,9 @@ class Game(State):
             if self.ai_button.is_clicked(mouse_pos):
                 #change button color to green if AI mode is enabled
                 if self.ai_mode:
-                    self.ai_button.color = (200, 200, 255)
+                    self.ai_button.color = Globals.BUTTON_COLOR
                 else:
-                    self.ai_button.color = (100, 255, 100)
+                    self.ai_button.color = Globals.BUTTON_TOGGLED_COLOR
                 self.ai_mode = not self.ai_mode
                 print(f"AI Mode {'enabled' if self.ai_mode else 'disabled'}")
                 return
@@ -274,10 +275,10 @@ class Game(State):
                 # Change button color to indicate active state
                 original_text = button.text
                 dots = "." * self.loading_dots
-                button.color = (150, 150, 200)  # Slightly different color
+                button.color = Globals.BUTTON_TOGGLED_COLOR  # Slightly different color
                 button.draw(surface)
                 button.text = original_text
-                button.color = (200, 200, 255)  # Reset to original
+                button.color = Globals.BUTTON_COLOR  # Reset to original
                 
                 # Draw elapsed time
                 elapsed = self.current_solver.get_elapsed_time()
@@ -297,13 +298,14 @@ class Game(State):
         moves_text = self.font.render(f"Moves: {self.moves}", True, (0, 0, 0))
         surface.blit(moves_text, (20, 20))
         
-        completed_text = self.font.render(f"Completed: {self.completed_branches}/{len(Globals.COLORS)}", True, (0, 0, 0))
+        completed_text = self.font.render(f"Completed: {Globals.COMPLETED_BRANCHES}/{Globals.NUM_COLORS}", True, (0, 0, 0))
         surface.blit(completed_text, (20, 60))
         
         # Draw instructions
         help_text = self.font.render("Click to select a branch, then click another to move birds", True, (0, 0, 0))
-        surface.blit(help_text, (Globals.SCREEN_WIDTH//2 - 240, 20))
+        surface.blit(help_text, (Globals.SCREEN_WIDTH//2 - 350, 20))
 
+        # TODO: Remove?
         """      
         # If a solver is running, show a more prominent loading indicator
         if self.current_solver and self.current_solver.is_running:
@@ -330,12 +332,24 @@ class Game(State):
             # Draw win message
             win_font = pygame.font.SysFont(None, 72)
             win_text = win_font.render("You Won!", True, (255, 255, 255))
-            win_rect = win_text.get_rect(center=(Globals.SCREEN_WIDTH//2, Globals.SCREEN_HEIGHT//2))
+            win_rect = win_text.get_rect(center=(Globals.SCREEN_WIDTH//2, Globals.SCREEN_HEIGHT//2 - 60))
             surface.blit(win_text, win_rect)
             
             moves_result = self.font.render(f"Total Moves: {self.moves}", True, (255, 255, 255))
-            moves_rect = moves_result.get_rect(center=(Globals.SCREEN_WIDTH//2, Globals.SCREEN_HEIGHT//2 + 60))
+            moves_rect = moves_result.get_rect(center=(Globals.SCREEN_WIDTH//2, Globals.SCREEN_HEIGHT//2))
             surface.blit(moves_result, moves_rect)
+            
+            return_msg = self.font.render(f"Press M to go back to Main Menu", True, (255, 255, 255))
+            return_msg_rect = return_msg.get_rect(center=(Globals.SCREEN_WIDTH//2, Globals.SCREEN_HEIGHT//2 + 60))
+            surface.blit(return_msg, return_msg_rect)
+            
+            for event in pygame.event.get(): 
+                from windows.mainmenu import MainMenu
+                if event.type == pygame.KEYDOWN: # Check if ESC was pressed
+                    # Check if M was pressed
+                    if event.key == pygame.K_m:
+                        self.next_state = MainMenu()
+                        return
         
     def get_game_state(self):
         """Return the current game state."""

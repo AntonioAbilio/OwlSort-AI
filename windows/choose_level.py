@@ -31,9 +31,9 @@ class ChooseLevel(State):
         self.button_width = 180
         self.button_width2 = 250
         self.button_height = 50
-        self.go_back_button = Button(Globals.SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", (200, 200, 255), (150, 150, 255))
-        self.levelList_button = Button(Globals.MOCK_BRANCH_WIDTH/4, self.upper_margin - self.button_height, self.button_width, self.button_height, "Level List", (200, 200, 255), (150, 150, 255))
-        self.custom_button = Button(Globals.SCREEN_WIDTH - Globals.MOCK_BRANCH_WIDTH + 2*self.button_width2/3, self.upper_margin - self.button_height, self.button_width2, self.button_height, "Custom (Load from file)", (200, 200, 255), (150, 150, 255))
+        self.go_back_button = Button(Globals.SCREEN_WIDTH/4 - 250, 100, 180, 50, "<= Go Back", Globals.BUTTON_COLOR, Globals.BUTTON_HOVER_COLOR)
+        self.levelList_button = Button(Globals.MOCK_BRANCH_WIDTH/4, self.upper_margin - self.button_height, self.button_width, self.button_height, "Level List", Globals.BUTTON_COLOR,Globals.BUTTON_HOVER_COLOR)
+        self.custom_button = Button(Globals.SCREEN_WIDTH - Globals.MOCK_BRANCH_WIDTH + 2*self.button_width2/3, self.upper_margin - self.button_height, self.button_width2, self.button_height, "Custom (Load from file)", Globals.BUTTON_COLOR, Globals.BUTTON_HOVER_COLOR)
         self.loading = False  # To indicate if a level is being loaded
 
     def handle_event(self, event):
