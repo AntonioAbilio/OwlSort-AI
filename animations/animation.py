@@ -1,5 +1,5 @@
 import pygame
-import constants
+from global_vars import Globals
 
 class Animation:
     def __init__(self, spritesheet, frames_x, frames_y, frame_duration, row=1):
@@ -31,7 +31,7 @@ class Animation:
     def update(self):
         if (not self.active):
             return
-        self.frame_time_left -= constants.delta_time
+        self.frame_time_left -= Globals.DELTA_TIME
         if (self.frame_time_left <= 0):
             self.frame_time_left += self.frame_duration
             self.frame = (self.frame + 1)%self.num_frames

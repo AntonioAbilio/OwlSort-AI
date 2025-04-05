@@ -1,36 +1,34 @@
 import pygame 
-import sys
-import random
-import math
 from algorithms.algorithm_picker import Algorithm, Solver
 from windows.state_manager import State
-from collections import deque
 from algorithms.solution_cache import SolutionCache
 import time
 
-
-from models.bird import Bird
-from models.branch import Branch
 from models.button import Button
 
-import constants
+from global_vars import Globals
 
 from algorithms.dfs import *
 from states.gameState import GameState
 
 
 class Game(State):
-    def __init__(self, num_branches, bird_list=[], num_colors=4, is_custom=False):
+    def __init__(self, bird_list, num_branches, max_birds_per_branch, num_colors):
         super().__init__()
         self.current_time = time.time()
-        self.delta_time = 0
+        Globals.MAX_BIRDS_PER_BRANCH = max_birds_per_branch
 
         self.branches = []
-        constants.num_colors = num_colors
+        Globals.NUM_COLORS = num_colors
+        self.branches = bird_list
         self.background = pygame.image.load("assets/forest_bg.png")
-        self.background = pygame.transform.scale(self.background, (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        self.background = self.background.convert_alpha()  # Optimize for performance
+
+        self.background_surface = None
+        self.initialize_background()
+        
+        self.background = pygame.transform.scale(self.background, (Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
         self.selected_branch = None
-        self.setup_level(num_branches, bird_list, is_custom)
         self.moves = 0
         self.completed_branches = 0
         self.font = pygame.font.SysFont(None, 36)
@@ -45,7 +43,7 @@ class Game(State):
 
         ai_button_width = 150
         ai_button_height = 50
-        ai_button_x = constants.SCREEN_WIDTH - ai_button_width - 20
+        ai_button_x = Globals.SCREEN_WIDTH - ai_button_width - 20
         ai_button_y = 20
         self.ai_button = Button(ai_button_x, ai_button_y, ai_button_width, ai_button_height, "AI Mode", (200, 200, 255), (150, 150, 255))
         self.ai_mode = False
@@ -57,11 +55,11 @@ class Game(State):
         
         total_buttons = len(algorithms)
         total_width = total_buttons * button_width
-        spacing = (constants.SCREEN_WIDTH - total_width) // (total_buttons + 1)
+        spacing = (Globals.SCREEN_WIDTH - total_width) // (total_buttons + 1)
         
         for i, algorithm in enumerate(algorithms):
             x = spacing + i * (button_width + spacing)
-            y = constants.SCREEN_HEIGHT - button_height - 20
+            y = Globals.SCREEN_HEIGHT - button_height - 20
             button = Button(x, y, button_width, button_height, f"Hint ({algorithm[0]})",(200, 200, 255), (150, 150, 255))
             self.hint_buttons.append((button, algorithm))
             
@@ -75,51 +73,6 @@ class Game(State):
         self.current_solver = None
         self.loading_dots = 0
         self.loading_timer = 0
-        
-    def setup_level(self, num_branches, bird_list, is_custom):
-        # Create branches with zigzag layout (left to right, top to bottom)
-        margin = 0
-        upper_offset = 150
-        id = 0
-        x = 0
-        y = 0
-        row = 0
-        left = True
-        all_birds = []
-        
-        if not is_custom:
-            random_birds=[]
-            # Create exactly MAX_BIRDS_PER_BRANCH birds of each color
-            for color in constants.COLORS:
-                for _ in range(constants.MAX_BIRDS_PER_BRANCH):
-                    random_birds.append(Bird(color))
-            random.shuffle(random_birds) # Shuffle all birds
-            bird_index = 0
-            for i in range(num_branches):  # FIXME: Make this not hardcoded
-                branch = []
-                for j in range(constants.MAX_BIRDS_PER_BRANCH):
-                    if bird_index < len(random_birds):
-                        branch.append(random_birds[bird_index])
-                        bird_index += 1
-                    else:
-                        break
-                all_birds.append(branch)
-        else:
-            all_birds = bird_list
-    
-        for i, branch_data in enumerate(all_birds):
-            y = upper_offset + row * (constants.BRANCH_HEIGHT + 100)
-            if left:
-                x = margin
-            else:
-                x = constants.SCREEN_WIDTH - margin - constants.BRANCH_WIDTH
-                row += 1
-            branch = Branch(x, y, id)
-            for color in branch_data:
-                branch.add_bird(color)
-            self.branches.append(branch)
-            left = not left
-            id += 1
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -267,7 +220,7 @@ class Game(State):
 
     def update(self):
         if self.ai_mode and self.ai_algorithm and not self.current_solver:
-            if self.current_time + constants.ALGORITHM_SLEEP < time.time():
+            if self.current_time + Globals.ALGORITHM_SLEEP < time.time():
                 self.current_time = time.time()
                 if self.solution_path:
                     from_idx, to_idx = self.solution_path.pop(0)
@@ -281,11 +234,20 @@ class Game(State):
                 else:
                     self.get_hint(self.ai_algorithm)
 
+    def initialize_background(self):
+        # Create a surface for the background
+        self.background_surface = pygame.Surface((Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
+        # Scale the background image to fit the screen
+        scaled_background = pygame.transform.scale(self.background, (Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
+        # Draw the scaled background image to the background surface
+        self.background_surface.blit(scaled_background, (0, 0))
+
     def draw(self, surface):
-        #surface.fill((135, 206, 235))  # Sky blue background
-        surface.blit(self.background, (0, 0))
-        
-        for branch in self.branches:  # TODO: make this use the updated textures
+        # Draw background
+        surface.blit(self.background_surface, (0, 0))
+
+        # Draw branches
+        for branch in self.branches:
             branch.draw(surface)
         
         # Highlight selected branch
@@ -298,6 +260,7 @@ class Game(State):
         if self.hint_to:
             pygame.draw.rect(surface, (255, 165, 0), self.hint_to.rect, 3)  # Orange for target
         
+        # Draw AI solve button
         self.ai_button.draw(surface)
         
         # Draw hint buttons (with loading state if active)
@@ -319,7 +282,7 @@ class Game(State):
                 # Draw elapsed time
                 elapsed = self.current_solver.get_elapsed_time()
 
-                if elapsed > constants.ALGORITHM_TIMEOUT: #TODO: maybe dont do this here?
+                if elapsed > Globals.ALGORITHM_TIMEOUT: #TODO: maybe dont do this here?
                     self.current_solver.cancel()
                     print(f"Algorithm {algorithm_info[0]} took too long and was cancelled")
 
@@ -334,12 +297,12 @@ class Game(State):
         moves_text = self.font.render(f"Moves: {self.moves}", True, (0, 0, 0))
         surface.blit(moves_text, (20, 20))
         
-        completed_text = self.font.render(f"Completed: {self.completed_branches}/{len(constants.COLORS)}", True, (0, 0, 0))
+        completed_text = self.font.render(f"Completed: {self.completed_branches}/{len(Globals.COLORS)}", True, (0, 0, 0))
         surface.blit(completed_text, (20, 60))
         
-        # Instructions
+        # Draw instructions
         help_text = self.font.render("Click to select a branch, then click another to move birds", True, (0, 0, 0))
-        surface.blit(help_text, (constants.SCREEN_WIDTH//2 - 240, 20))
+        surface.blit(help_text, (Globals.SCREEN_WIDTH//2 - 240, 20))
 
         """      
         # If a solver is running, show a more prominent loading indicator
@@ -347,31 +310,31 @@ class Game(State):
             algo_name = self.current_solver.algorithm_name
             dots = "." * self.loading_dots
             loading_text = self.font.render(f"Running {algo_name}{dots}", True, (0, 0, 0))
-            loading_rect = loading_text.get_rect(center=(constants.SCREEN_WIDTH//2, 100))
+            loading_rect = loading_text.get_rect(center=(Globals.SCREEN_WIDTH//2, 100))
             surface.blit(loading_text, loading_rect)
             
             # Show elapsed time
             elapsed = self.current_solver.get_elapsed_time()
             time_text = self.font.render(f"Time: {elapsed:.1f}s", True, (0, 0, 0))
-            time_rect = time_text.get_rect(center=(constants.SCREEN_WIDTH//2, 130))
+            time_rect = time_text.get_rect(center=(Globals.SCREEN_WIDTH//2, 130))
             surface.blit(time_text, time_rect)
         """ 
         
-        # Check if player won
+        # Draw game over screen (if game is over)
         if (self.is_game_over() == 1):
             # Draw semi-transparent overlay
-            overlay = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay = pygame.Surface((Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 128))
             surface.blit(overlay, (0, 0))
             
             # Draw win message
             win_font = pygame.font.SysFont(None, 72)
             win_text = win_font.render("You Won!", True, (255, 255, 255))
-            win_rect = win_text.get_rect(center=(constants.SCREEN_WIDTH//2, constants.SCREEN_HEIGHT//2))
+            win_rect = win_text.get_rect(center=(Globals.SCREEN_WIDTH//2, Globals.SCREEN_HEIGHT//2))
             surface.blit(win_text, win_rect)
             
             moves_result = self.font.render(f"Total Moves: {self.moves}", True, (255, 255, 255))
-            moves_rect = moves_result.get_rect(center=(constants.SCREEN_WIDTH//2, constants.SCREEN_HEIGHT//2 + 60))
+            moves_rect = moves_result.get_rect(center=(Globals.SCREEN_WIDTH//2, Globals.SCREEN_HEIGHT//2 + 60))
             surface.blit(moves_result, moves_rect)
         
     def get_game_state(self):

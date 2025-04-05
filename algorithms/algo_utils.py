@@ -1,5 +1,5 @@
 from states.gameState import GameState
-from constants import COLORS, MAX_BIRDS_PER_BRANCH
+from global_vars import Globals
 
 def expand_states(game_state):
     assert isinstance(game_state, GameState)
@@ -24,7 +24,7 @@ def evaluate_state(game_state):
     for branch in game_state.branches:
         if not branch.birds:
             continue
-        if len(branch.birds) == MAX_BIRDS_PER_BRANCH and all(bird.color == branch.birds[0].color for bird in branch.birds):
+        if len(branch.birds) == Globals.MAX_BIRDS_PER_BRANCH and all(bird.color == branch.birds[0].color for bird in branch.birds):
             completed_branches += 1
         else:
             unsorted_branches += 1
@@ -55,7 +55,7 @@ def is_deadlock(game_state):
         return True
     
     # Check if any color has birds spread across more branches than can be combined
-    color_branch_count = {color: 0 for color in COLORS}
+    color_branch_count = {color: 0 for color in Globals.COLORS}
     
     for branch in game_state.branches:
         branch_colors = set()
