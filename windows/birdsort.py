@@ -45,7 +45,7 @@ class Game(State):
         ai_button_width = 150
         ai_button_height = 50
         ai_button_x = Globals.SCREEN_WIDTH - ai_button_width - 20
-        ai_button_y = 20
+        ai_button_y = 10
         self.ai_button = Button(ai_button_x, ai_button_y, ai_button_width, ai_button_height, "AI Mode", Globals.BUTTON_COLOR, Globals.BUTTON_HOVER_COLOR)
         self.ai_mode = False
         self.ai_algorithm = None
@@ -296,14 +296,14 @@ class Game(State):
         
         # Draw UI
         moves_text = self.font.render(f"Moves: {self.moves}", True, (0, 0, 0))
-        surface.blit(moves_text, (20, 20))
+        surface.blit(moves_text, (20, 10))
         
         completed_text = self.font.render(f"Completed: {Globals.COMPLETED_BRANCHES}/{Globals.NUM_COLORS}", True, (0, 0, 0))
-        surface.blit(completed_text, (20, 60))
+        surface.blit(completed_text, (20, 35))
         
         # Draw instructions
         help_text = self.font.render("Click to select a branch, then click another to move birds", True, (0, 0, 0))
-        surface.blit(help_text, (Globals.SCREEN_WIDTH//2 - 350, 20))
+        surface.blit(help_text, (Globals.SCREEN_WIDTH//2 - 350, 10))
 
         # TODO: Remove?
         """      
