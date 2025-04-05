@@ -241,12 +241,11 @@ class Game(State):
         self.background_surface.blit(scaled_background, (0, 0))
 
     def draw(self, surface):
-        #surface.fill((135, 206, 235))  # Sky blue background
-        #scaled_background = pygame.transform.scale(self.background, (surface.get_width(), surface.get_height()))
-        #surface.blit(scaled_background, (0, 0))  # Draw scaled background
+        # Draw background
         surface.blit(self.background_surface, (0, 0))
 
-        for branch in self.branches:  # TODO: make this use the updated textures
+        # Draw branches
+        for branch in self.branches:
             branch.draw(surface)
         
         # Highlight selected branch
@@ -259,6 +258,7 @@ class Game(State):
         if self.hint_to:
             pygame.draw.rect(surface, (255, 165, 0), self.hint_to.rect, 3)  # Orange for target
         
+        # Draw AI solve button
         self.ai_button.draw(surface)
         
         # Draw hint buttons (with loading state if active)
@@ -298,7 +298,7 @@ class Game(State):
         completed_text = self.font.render(f"Completed: {self.completed_branches}/{len(Globals.COLORS)}", True, (0, 0, 0))
         surface.blit(completed_text, (20, 60))
         
-        # Instructions
+        # Draw instructions
         help_text = self.font.render("Click to select a branch, then click another to move birds", True, (0, 0, 0))
         surface.blit(help_text, (Globals.SCREEN_WIDTH//2 - 240, 20))
 
@@ -318,7 +318,7 @@ class Game(State):
             surface.blit(time_text, time_rect)
         """ 
         
-        # Check if player won
+        # Draw game over screen (if game is over)
         if (self.is_game_over() == 1):
             # Draw semi-transparent overlay
             overlay = pygame.Surface((Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), pygame.SRCALPHA)

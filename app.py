@@ -17,9 +17,9 @@ programIcon = pygame.image.load('assets/static_cucu.png')
 pygame.display.set_icon(programIcon)
 
 # Set up the screen
-ctypes.windll.shcore.SetProcessDpiAwareness(1)  # Enable DPI scaling # TODO: This might be better for scaling (Test with a non 4k display)
+#ctypes.windll.shcore.SetProcessDpiAwareness(1)  # Enable DPI scaling # TODO: This might be better for scaling (Test with a non 4k display)
 
-screen = pygame.display.set_mode((Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
+screen = pygame.display.set_mode((Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
 pygame.display.set_caption("Bird Sort 2: Color Puzzle")
 clock = pygame.time.Clock()
 Globals.DELTA_TIME = clock.tick(60) / 1000.0
@@ -35,6 +35,9 @@ def main():
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN: # Check if ESC was pressed
+                if event.key == pygame.K_ESCAPE:
+                    running = False
             stateManager.handle_event(event)
         
         stateManager.update()

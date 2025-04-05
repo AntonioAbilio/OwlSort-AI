@@ -15,6 +15,7 @@ class MainMenu(State) :
         self.background = pygame.transform.scale(self.background, (Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
         self.background = self.background.convert_alpha()  # Optimize for performance
         
+        self.branch_margin = 0
         self.upper_left_branch = pygame.image.load("assets/branch.png")
         self.upper_left_branch = self.upper_left_branch.convert_alpha()  # Optimize for performance
         
@@ -48,15 +49,22 @@ class MainMenu(State) :
         scaled_background = pygame.transform.scale(self.background, (surface.get_width(), surface.get_height()))
         surface.blit(scaled_background, (0, 0))  # Draw scaled background
         
+        # Draw title
+        surface.blit(self.title, (Globals.SCREEN_WIDTH/2 - 920/2, 76))
+        
+        # Draw buttons
         self.start_button.draw(surface)
         self.quit_button.draw(surface)
-        surface.blit(self.title, (Globals.SCREEN_WIDTH/2 - 920/2, 76))
+    
+        # Draw branches
         surface.blit(self.upper_left_branch, (0, self.upper_margin))
         surface.blit(self.upper_left_branch, (0, self.upper_margin + self.gap_between_branches_y))
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH, self.upper_margin))
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH,  self.upper_margin + self.gap_between_branches_y))
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + self.branch_margin, self.upper_margin))
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + self.branch_margin,  self.upper_margin + self.gap_between_branches_y))
+        
+        # Draw birds
         surface.blit(self.cucu, (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + Globals.BIRD_SIZE/2, self.upper_margin-self.offset))
         surface.blit(self.cucu, (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))
         surface.blit(pygame.transform.flip(self.cucu, True, False), (Globals.BRANCH_WIDTH - 2*Globals.BIRD_SIZE - Globals.BIRD_SIZE/2, self.upper_margin-self.offset))
         surface.blit(pygame.transform.flip(self.cucu, True, False), (Globals.BRANCH_WIDTH - 2*Globals.BIRD_SIZE - Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))        
-        
+           

@@ -66,9 +66,9 @@ class LevelGenerator:
         for _, branch_data in enumerate(all_birds):
             y = upper_offset + row * (Globals.BRANCH_HEIGHT + 100)
             if left:
-                x = margin
+                x = 0
             else:
-                x = Globals.SCREEN_WIDTH - margin - Globals.BRANCH_WIDTH
+                x = Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + margin
                 row += 1
             branch = Branch(x, y, id)
             for color in branch_data:

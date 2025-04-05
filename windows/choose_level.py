@@ -18,6 +18,7 @@ class ChooseLevel(State):
         self.text_surface = self.font.render("Choose Level", True, (0, 0, 0))
         self.text_surface = self.text_surface.convert_alpha()  # Optimize for performance
 
+        self.branch_margin = 0
         self.gap_between_branches_y = 188
         self.upper_margin = 2 * Globals.SCREEN_HEIGHT/5
         self.upper_left_branch = pygame.image.load("assets/branch.png")
@@ -75,22 +76,22 @@ class ChooseLevel(State):
         
             
     def draw(self, surface):
-        # Clear screen
+        # Draw background
         scaled_background = pygame.transform.scale(self.background, (surface.get_width(), surface.get_height()))
         surface.blit(scaled_background, (0, 0))  # Draw scaled background
-        offset = 35  # TODO: Remove (TEMP)
+        
+        # Draw title
+        surface.blit(self.text_surface, (Globals.SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
   
+        # Draw buttons
         self.go_back_button.draw(surface)
         self.levelList_button.draw(surface)
         self.custom_button.draw(surface)
-        surface.blit(self.text_surface, (Globals.SCREEN_WIDTH/2 - self.text_surface.get_width()/2, 150))
         
         # Draw branches
-        surface.blit(self.upper_left_branch, (0, self.upper_margin))  # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH, self.upper_margin))  # FIXME: Change to normal branch instead of image
+        surface.blit(self.upper_left_branch, (0, self.upper_margin))
+        surface.blit(pygame.transform.flip(self.upper_left_branch, True, False), (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + self.branch_margin, self.upper_margin))
         
         # Draw birds
-        surface.blit(self.cucu, (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))  # FIXME: Change to normal branch instead of image
-        surface.blit(pygame.transform.flip(self.cucu, True, False), (Globals.BRANCH_WIDTH - 2*Globals.BIRD_SIZE - Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))  # FIXME: Change to normal branch instead of image
-
-        
+        surface.blit(self.cucu, (Globals.SCREEN_WIDTH - Globals.BRANCH_WIDTH + Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))
+        surface.blit(pygame.transform.flip(self.cucu, True, False), (Globals.BRANCH_WIDTH - 2*Globals.BIRD_SIZE - Globals.BIRD_SIZE/2, self.upper_margin-self.offset-self.gap_between_branches_y))
