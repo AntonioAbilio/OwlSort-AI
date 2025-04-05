@@ -25,7 +25,8 @@ class Globals:
     COLORS = [
         (255, 0, 0),    # Red
         (255, 255, 255),# Brown
-        (0, 255, 0),    # Green
+        (76, 138, 95),  # Green
+        (90, 69, 199),  # Purple
         (255, 255, 0),  # Yellow
         (255, 0, 255),  # Purple
         (0, 255, 255),  # Cyan

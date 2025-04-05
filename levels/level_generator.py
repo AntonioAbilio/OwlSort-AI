@@ -14,12 +14,12 @@ class LevelGenerator:
         if bird_list == None: # Generate random birds (level is not custom)
             random_birds=[]
             # Create exactly MAX_BIRDS_PER_BRANCH birds of each color
-            for color in Globals.COLORS: # TODO: Make this dynamic
+            for color in Globals.COLORS:
                 for _ in range(max_birds_per_branch):
                     random_birds.append(Bird(color))
             random.shuffle(random_birds) # Shuffle all birds
             bird_index = 0
-            for _ in range(num_branches):  # FIXME: Make this not hardcoded
+            for _ in range(num_branches):
                 branch = []
                 for j in range(max_birds_per_branch):
                     if bird_index < len(random_birds):
@@ -34,10 +34,20 @@ class LevelGenerator:
         self.create_game_structure(all_birds)
         return branches
     
-    # TODO: Separate in custom level and random level
     def generate_level_from_file(self, file_path):
         with open(file_path, 'r') as file:
-            content = file.read().strip()  # Read and strip unnecessary whitespaces
+            # Remove comments and empty lines
+            lines = []
+            for line in file:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                # Remove inline comments (after #)
+                line = line.split('#')[0].strip()
+                if line:
+                    lines.append(line)
+            content = " ".join(lines)
+            
             # Convert the string representation into list of lists
             try:
                 rgb_list = ast.literal_eval(content)
