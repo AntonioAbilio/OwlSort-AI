@@ -224,7 +224,9 @@ class Game(State):
             if self.current_time + Globals.ALGORITHM_SLEEP < time.time():
                 self.current_time = time.time()
                 if self.solution_path:
-                    from_idx, to_idx = self.solution_path.pop(0)
+                    solution_path_list = list(self.solution_path)
+                    from_idx, to_idx = solution_path_list.pop(0)
+                    self.solution_path = solution_path_list
                     self.game_state.apply_move(from_idx, to_idx)
                     self.moves += 1
                     self.game_state.move_history.append((from_idx, to_idx))
