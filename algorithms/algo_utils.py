@@ -1,5 +1,6 @@
 from states.gameState import GameState
 from global_vars import Globals
+import math
 
 def expand_states(game_state):
     assert isinstance(game_state, GameState)
@@ -40,7 +41,7 @@ def evaluate_state(game_state):
                 color_group_counts[current_color] = color_group_counts.get(current_color, 0) + 1
 
     merge_moves = sum((count - 1) for count in color_group_counts.values() if count > 0)
-    branch_solve_moves = unsorted_branches/2
+    branch_solve_moves = math.ceil(unsorted_branches/2)
     
     heuristic_lower_bound = max(branch_solve_moves, merge_moves)
 
