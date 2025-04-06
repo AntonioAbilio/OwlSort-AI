@@ -40,8 +40,9 @@ def evaluate_state(game_state):
                 color_group_counts[current_color] = color_group_counts.get(current_color, 0) + 1
 
     merge_moves = sum((count - 1) for count in color_group_counts.values() if count > 0)
+    branch_solve_moves = unsorted_branches/2
     
-    heuristic_lower_bound = max(unsorted_branches, merge_moves)
+    heuristic_lower_bound = max(branch_solve_moves, merge_moves)
 
 
 
